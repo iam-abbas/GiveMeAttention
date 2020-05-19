@@ -1,31 +1,70 @@
-import React, { useEffect } from 'react';
-import messaging from '@react-native-firebase/messaging';
-import {
-  View,
-  Text,
-} from 'react-native';
+import React from 'react';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 
+import LoadingScreen from './src/screens/loading';
+import LoginScreen from './src/screens/login';
+import RegisterScreen from './src/screens/register';
 
-const App = () => {
-  useEffect(() => {
-  // Get the device token
-  messaging()
-    .getToken()
-    .then(token => {
-      console.log(token);
-    });
+import HomeScreen from './src/screens/home';
 
-  // Listen to whether the token changes
-  return messaging().onTokenRefresh(token => {
-    console.log(token);
-  });
-}, []);
-  return (
-    <View>
-      <Text>Hi, Sup BRO</Text>
-    </View>
-  );
+import auth from '@react-native-firebase/auth';
+
+signOutUser = () => {
+  auth().signOut();
 };
 
+const AppTabNavigator = createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      headerShown: false,
+      // headerStyle: {
+      //   backgroundColor: "#ff8566",
+      //   elevation: 0,
+      //   shadowOpacity: 0,
+      // },
+      headerTintColor: '#fff',
+    },
+  },
+});
 
-export default App;
+const AuthStack = createStackNavigator({
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      headerShown: false,
+      // headerStyle: {
+      //   backgroundColor: "#ff8566",
+      //   elevation: 0,
+      //   shadowOpacity: 0,
+      // },
+      headerTintColor: '#fff',
+    },
+  },
+  Register: {
+    screen: RegisterScreen,
+    navigationOptions: {
+      headerShown: false,
+      // headerStyle: {
+      //   backgroundColor: "#ff8566",
+      //   elevation: 0,
+      //   shadowOpacity: 0,
+      // },
+      headerTintColor: '#fff',
+    },
+  },
+});
+
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      Loading: LoadingScreen,
+      App: AppTabNavigator,
+      Auth: AuthStack,
+    },
+    {
+      initialRouteName: "Loading",
+    }
+  )
+);
