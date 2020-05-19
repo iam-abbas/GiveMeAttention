@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "360145232368",
+    "firebase_url": "https://givemeattention2-3c180.firebaseio.com",
+    "project_id": "givemeattention2-3c180",
+    "storage_bucket": "givemeattention2-3c180.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360145232368:android:10485f0c12f253f1e67d35",
+        "android_client_info": {
+          "package_name": "com.givemeattention"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360145232368-1iid9fiqdeufpus5mbb5qqemt8ppab6m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.givemeattention",
+            "certificate_hash": "81fe6926a5a95da5277d0299ebc01cb5fa9579fc"
+          }
+        },
+        {
+          "client_id": "360145232368-riggc67ai58n1g53jaff5vg364mtdan2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM1eHTa-00kvsP_22pCrNea4OUBPtpgp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360145232368-riggc67ai58n1g53jaff5vg364mtdan2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
