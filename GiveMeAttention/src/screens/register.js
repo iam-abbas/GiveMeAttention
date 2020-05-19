@@ -7,16 +7,32 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default class RegisterScreen extends React.Component {
   state = {
     name: '',
+    username: '',
     email: '',
     password: '',
     errorMessage: null,
   };
 
+  async checkUniqueUsername(uname) {
+    const usersCollection = firestore().collection('users');
+    usersCollection.get().then(querySnapshot => {
+      querySnapshot.forEach(documentSnapshot => {
+        if (documentSnapshot.data().username == uname) {
+          return true;
+        }
+      });
+    });
+    return false;
+  }
+
   handleSignUp = () => {
+    const usersCollection = firestore().collection('Users');
+
     auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(userCredentials => {
@@ -26,6 +42,10 @@ export default class RegisterScreen extends React.Component {
       })
       .catch(error => this.setState({errorMessage: error.message}));
   };
+
+  componentDidMount() {
+    console.log(this.checkUniqueUsername('hello'));
+  }
 
   render() {
     return (
