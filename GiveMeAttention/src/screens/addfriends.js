@@ -18,7 +18,6 @@ export default class AddFriendScreen extends React.Component {
   }
 
   addFriend = async () => {
-    console.log('Hi');
     let username = this.state.friendUsername;
     const user_data = await firestore()
       .collection('usernames')
@@ -26,10 +25,20 @@ export default class AddFriendScreen extends React.Component {
       .get();
     if (user_data.exists) {
       const uid = user_data.data().uid;
+      const friends_profile = await firestore()
+        .collection('users')
+        .doc(uid)
+        .get();
+      if (friends_profile.data().friendsList.includes(auth().currentUser.uid)) {
+        return this.setState({message: 'This user is already your friend'});
+      }
       firestore()
         .collection('users')
-        .doc(auth().currentUser.uid)
-        .update('friendRequestsList', firestore.FieldValue.arrayUnion(uid))
+        .doc(uid)
+        .update(
+          'friendRequestsList',
+          firestore.FieldValue.arrayUnion(auth().currentUser.uid),
+        )
         .then(() => {
           this.setState({message: 'Succesffuly sent friend request'});
         });

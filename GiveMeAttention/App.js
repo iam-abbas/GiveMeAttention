@@ -8,6 +8,7 @@ import RegisterScreen from './src/screens/register';
 
 import HomeScreen from './src/screens/home';
 import AddFriendScreen from './src/screens/addfriends';
+import RequestsScreen from './src/screens/requests';
 import auth from '@react-native-firebase/auth';
 
 signOutUser = () => {
@@ -24,6 +25,13 @@ const AppTabNavigator = createStackNavigator({
   },
   AddFriend: {
     screen: AddFriendScreen,
+    navigationOptions: {
+      headerShown: false,
+      headerTintColor: '#fff',
+    },
+  },
+  FriendRequests: {
+    screen: RequestsScreen,
     navigationOptions: {
       headerShown: false,
       headerTintColor: '#fff',

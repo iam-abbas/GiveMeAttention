@@ -84,7 +84,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.banner}>
           <View style={styles.topBar}>
             <TouchableOpacity
-              onPress={() => console.log(1)}
+              onPress={() =>  this.props.navigation.navigate("FriendRequests")}
               style={styles.topButton}>
               <Text style={styles.topButtonText}>Friend Requests</Text>
             </TouchableOpacity>
@@ -101,7 +101,7 @@ export default class HomeScreen extends React.Component {
             }}
             style={[styles.dp, styles.dpLarge]}
           />
-          <Text style={styles.username}>Abbas XYZ</Text>
+          <Text style={styles.username}>{this.state.username}</Text>
           <TouchableOpacity onPress={this.signOutUser}>
             <Text>Log Out</Text>
           </TouchableOpacity>
