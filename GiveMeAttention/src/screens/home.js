@@ -48,8 +48,7 @@ export default class HomeScreen extends React.Component {
 
   sendUserNotification = async userid => {
     const user_data = await this.getProfileByUserID(userid);
-    fcm_token = user_data.fcmtoken;
-    console.log(fcm_token);
+    var fcm_token = user_data.fcmtoken;
     const FIREBASE_API_KEY =
       'AAAAU9pUIfA:APA91bFNiuUwGYRATBERB1T2F1fLOaYYl2cpJGPxdVufXdsut2jSTl1NquEeYAa73lIF1wekjundPbqt7eja4oxH8GXzU99GI_I281terZr5Soaa1UuKLtYNqoZHzJ-zk3jv6GYH9DBC';
     const message = {
@@ -75,6 +74,13 @@ export default class HomeScreen extends React.Component {
       body: JSON.stringify(message),
     });
     response = await response.json();
+    await firestore()
+      .collection('users')
+      .doc(userid)
+      .update('points', firestore.FieldValue.increment(1))
+      .then(() => {
+        console.log('Increased points');
+      });
   };
 
   fetchUserData = async () => {
@@ -101,7 +107,6 @@ export default class HomeScreen extends React.Component {
   }
 
   renderFriends = () => {
-    console.log(this.state.friendsList);
     if (this.state.friendData === null) {
       return (
         <View
@@ -116,27 +121,29 @@ export default class HomeScreen extends React.Component {
         </View>
       );
     } else {
-      return (
-        <View>
-          {this.state.friendsList.map((fid, key) => {
-            let friend = this.state.friendData[fid];
-            return (
-              <ContactCard
-                key={key}
-                imageURL="https://i.imgur.com/2D7TdPl.jpg"
-                name={friend.username}
-                onPress={() => {
-                  this.sendUserNotification(fid);
-                }}
-                style={styles.contact}
-              />
-            );
-          })}
-        </View>
-      );
+      var key = 0;
+      var output = [];
+      for (var fid in this.state.friendData) {
+        key++;
+        let friend = this.state.friendData[fid];
+        var tempItem = (
+          <View key={key}>
+            <ContactCard
+              key={key}
+              imageURL="https://i.imgur.com/2D7TdPl.jpg"
+              name={friend.username}
+              onPress={() => {
+                this.sendUserNotification(fid);
+              }}
+              style={styles.contact}
+            />
+          </View>
+        );
+        output[key] = tempItem;
+      }
+      return output;
     }
   };
-
   render() {
     return (
       <ScrollView

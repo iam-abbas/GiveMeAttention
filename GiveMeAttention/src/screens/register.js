@@ -75,6 +75,7 @@ export default class RegisterScreen extends React.Component {
         name: pname,
         email: mailid,
         fcmtoken: this.state.fcm_token,
+        points: 0,
         friendsList: [],
         friendRequestsList: [],
       })
