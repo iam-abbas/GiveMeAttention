@@ -27,6 +27,9 @@ export default class HomeScreen extends React.Component {
   };
   constructor(props) {
     super(props);
+    this.props.navigation.addListener('didFocus', payload => {
+      this.fetchUserData();
+    });
   }
 
   signOutUser = () => {
@@ -43,7 +46,9 @@ export default class HomeScreen extends React.Component {
     return user.data();
   };
 
-  async componentDidMount() {
+  fetchUserData = async () => {
+    console.log('Loading data..');
+    this.setState({friendData: null});
     const uid = this.state.uid;
     const userData = await firestore()
       .collection('users')
@@ -58,9 +63,7 @@ export default class HomeScreen extends React.Component {
       friendData[item] = data;
     }
     this.setState({friendData});
-
-
-  }
+  };
 
   render() {
     if (this.state.friendData === null) {
@@ -84,7 +87,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.banner}>
           <View style={styles.topBar}>
             <TouchableOpacity
-              onPress={() =>  this.props.navigation.navigate("FriendRequests")}
+              onPress={() => this.props.navigation.navigate('FriendRequests')}
               style={styles.topButton}>
               <Text style={styles.topButtonText}>Friend Requests</Text>
             </TouchableOpacity>
@@ -111,7 +114,7 @@ export default class HomeScreen extends React.Component {
             <Button
               style={styles.headerButton}
               label="Add BFFs"
-              onPress={() => this.props.navigation.navigate("AddFriend")}
+              onPress={() => this.props.navigation.navigate('AddFriend')}
             />
           </View>
           <View style={styles.headerButtonContainer}>
