@@ -10,41 +10,69 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 export default class RegisterScreen extends React.Component {
-  state = {
-    name: '',
-    username: '',
-    email: '',
-    password: '',
-    errorMessage: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      username: '',
+      email: '',
+      password: '',
+      errorMessage: null,
+      userExists: false,
+    };
+  }
+  checkUniqueUsername = uname => {
+    firestore()
+      .collection('usernames')
+      .doc(uname)
+      .get()
+      .then(documentSnapshot => {
+        return this.setState({userExists: documentSnapshot.exists});
+      });
   };
 
-  async checkUniqueUsername(uname) {
-    const usersCollection = firestore().collection('users');
-    usersCollection.get().then(querySnapshot => {
-      querySnapshot.forEach(documentSnapshot => {
-        if (documentSnapshot.data().username == uname) {
-          return true;
-        }
+  createUser = (uname, mailid, pname, userid) => {
+    firestore()
+      .collection('users')
+      .doc(userid)
+      .set({
+        username: uname,
+        name: pname,
+        email: mailid,
+      })
+      .then(() => {
+        console.log('User added!');
       });
-    });
-    return false;
-  }
+    firestore()
+      .collection('usernames')
+      .doc(uname)
+      .set({
+        uid: userid,
+      })
+      .then(() => {
+        console.log('User added!');
+      });
+  };
 
   handleSignUp = () => {
-    const usersCollection = firestore().collection('Users');
-
     auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(userCredentials => {
-        return userCredentials.user.updateProfile({
-          displayName: this.state.name,
-        });
+        createUser(
+          this.state.username,
+          this.state.email,
+          this.state.name,
+          auth().currentUser.uid,
+        );
+        // return userCredentials.user.updateProfile({
+        //   displayName: this.state.name,
+        // });
       })
       .catch(error => this.setState({errorMessage: error.message}));
   };
 
   componentDidMount() {
-    console.log(this.checkUniqueUsername('hello'));
+    this.checkUniqueUsername;
   }
 
   render() {
@@ -69,6 +97,19 @@ export default class RegisterScreen extends React.Component {
               value={this.state.name}
             />
           </View>
+          <View style={{marginTop: 32}}>
+            <Text style={styles.inputTitle}>Username</Text>
+            <TextInput
+              style={styles.input}
+              autoCapitalize="none"
+              onChangeText={username => {
+                this.setState({username});
+                this.checkUniqueUsername(username);
+              }}
+              value={this.state.username}
+            />
+            <Text>This user: {String(this.state.userExists)}</Text>
+          </View>
 
           <View style={{marginTop: 32}}>
             <Text style={styles.inputTitle}>Email Address</Text>
@@ -92,7 +133,29 @@ export default class RegisterScreen extends React.Component {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (
+              this.state.name.length < 1 ||
+              this.state.email.length < 1 ||
+              this.state.password.length < 1
+            ) {
+              this.setState({
+                errorMessage: 'Please complete all the fields.',
+              });
+            } else if (!this.state.userExists) {
+              if (this.state.username.length >= 5) {
+                this.handleSignUp();
+              } else {
+                this.setState({
+                  errorMessage: 'Username too short. (min lenght: 5)',
+                });
+              }
+            } else {
+              this.setState({errorMessage: 'Username alerdy exists'});
+            }
+          }}>
           <Text style={{color: '#FFF', fontWeight: '500'}}>Sign up</Text>
         </TouchableOpacity>
 
