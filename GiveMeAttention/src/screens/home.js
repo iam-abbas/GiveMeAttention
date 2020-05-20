@@ -50,27 +50,31 @@ export default class HomeScreen extends React.Component {
     const user_data = await this.getProfileByUserID(userid);
     fcm_token = user_data.fcmtoken;
     console.log(fcm_token);
-    const FIREBASE_API_KEY = "AAAAU9pUIfA:APA91bFNiuUwGYRATBERB1T2F1fLOaYYl2cpJGPxdVufXdsut2jSTl1NquEeYAa73lIF1wekjundPbqt7eja4oxH8GXzU99GI_I281terZr5Soaa1UuKLtYNqoZHzJ-zk3jv6GYH9DBC";
+    const FIREBASE_API_KEY =
+      'AAAAU9pUIfA:APA91bFNiuUwGYRATBERB1T2F1fLOaYYl2cpJGPxdVufXdsut2jSTl1NquEeYAa73lIF1wekjundPbqt7eja4oxH8GXzU99GI_I281terZr5Soaa1UuKLtYNqoZHzJ-zk3jv6GYH9DBC';
     const message = {
-      registration_ids: [fcm_token], 
-       notification: {
-         title: "Hello",
-         body: "Sup bruv",
-         "vibrate": 1,
-         "sound": 1,
-         "show_in_foreground": true,
-         "priority": "high",
-         "content_available": true,
-       },
-   }
-   let headers = new Headers({
-    "Content-Type": "application/json",
-    "Authorization": "key=" + FIREBASE_API_KEY
-  });
+      registration_ids: [fcm_token],
+      notification: {
+        title: 'Hello',
+        body: 'Sup bruv',
+        vibrate: 1,
+        sound: 1,
+        show_in_foreground: true,
+        priority: 'high',
+        content_available: true,
+      },
+    };
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      Authorization: 'key=' + FIREBASE_API_KEY,
+    });
 
-  let response = await fetch("https://fcm.googleapis.com/fcm/send", { method: "POST", headers, body: JSON.stringify(message) })
-  response = await response.json();
-  console.log(response);
+    let response = await fetch('https://fcm.googleapis.com/fcm/send', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(message),
+    });
+    response = await response.json();
   };
 
   fetchUserData = async () => {
@@ -97,21 +101,44 @@ export default class HomeScreen extends React.Component {
     this.sendUserNotification(this.state.uid);
   }
 
-  render() {
+  renderFriends = () => {
+    console.log(this.state.friendsList);
     if (this.state.friendData === null) {
       return (
         <View
           style={{
-            backgroundColor: '#fff',
+            height: 200,
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
+            color: '#fff',
           }}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator color={"#fff"} size="large" />
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          {this.state.friendsList.map((fid, key) => {
+            let friend = this.state.friendData[fid];
+            return (
+              <ContactCard
+                key={key}
+                imageURL="https://i.imgur.com/2D7TdPl.jpg"
+                name={friend.username}
+                onPress={() => {
+                  console.log(friend.username);
+                }}
+                style={styles.contact}
+              />
+            );
+          })}
         </View>
       );
     }
+  };
 
+  render() {
     return (
       <ScrollView
         style={styles.container}
@@ -158,22 +185,7 @@ export default class HomeScreen extends React.Component {
             />
           </View>
         </View>
-        <View style={styles.contacts}>
-          {this.state.friendsList.map((fid, key) => {
-            let friend = this.state.friendData[fid];
-            return (
-              <ContactCard
-                key={key}
-                imageURL="https://i.imgur.com/2D7TdPl.jpg"
-                name={friend.username}
-                onPress={() => {
-                  console.log(friend.username);
-                }}
-                style={styles.contact}
-              />
-            );
-          })}
-        </View>
+        <View style={styles.contacts}>{this.renderFriends()}</View>
       </ScrollView>
     );
   }

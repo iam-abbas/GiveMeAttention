@@ -24,6 +24,14 @@ export default class RegisterScreen extends React.Component {
     };
     this.validateForm = this.validateForm.bind(this);
   }
+
+  requestUserPermission = async () => {
+    const settings = await messaging().requestPermission();
+    if (settings) {
+      console.log('Permission settings:', settings);
+    }
+  };
+
   checkUniqueUsername = uname => {
     firestore()
       .collection('usernames')
@@ -102,13 +110,13 @@ export default class RegisterScreen extends React.Component {
       .catch(error => this.setState({errorMessage: error.message}));
   };
 
-  componentDidMount() {
-
+  async componentDidMount() {
     messaging()
       .getToken()
       .then(fcm_token => {
         return this.setState({fcm_token});
       });
+    this.requestUserPermission();
   }
 
   render() {
