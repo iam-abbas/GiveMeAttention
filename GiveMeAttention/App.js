@@ -14,6 +14,7 @@ import auth from '@react-native-firebase/auth';
 signOutUser = () => {
   auth().signOut();
 };
+console.disableYellowBox = true;
 
 const AppTabNavigator = createStackNavigator({
   Home: {
