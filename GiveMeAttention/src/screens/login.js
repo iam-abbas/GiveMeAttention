@@ -4,21 +4,56 @@ import {Button} from '../common/Button';
 import {FormTextInput} from '../common/FormTextInput';
 import {COLOURS} from '../config/colors';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
+import firestore from '@react-native-firebase/firestore';
 
 export default class LoginScreen extends React.Component {
   state = {
     email: '',
     password: '',
     errorMessage: null,
+    fcm_token: null,
   };
 
-  handleLogin = () => {
+  handleLogin = async () => {
     const {email, password} = this.state;
 
     auth()
       .signInWithEmailAndPassword(email, password)
-      .catch(error => this.setState({errorMessage: error.message}));
+      .then(async () => {
+        if (this.state.fcm_token != null) {
+          await firestore()
+            .collection('users')
+            .doc(auth().currentUser.uid)
+            .update({
+              fcmtoken: this.state.fcm_token,
+            })
+            .then(() => {
+              console.log('User token updated');
+            });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({errorMessage: error.message});
+      });
   };
+
+  requestUserPermission = async () => {
+    const settings = await messaging().requestPermission();
+    if (settings) {
+      console.log('Permission settings:', settings);
+    }
+  };
+
+  async componentDidMount() {
+    await this.requestUserPermission();
+    await messaging()
+      .getToken()
+      .then(fcm_token => {
+        return this.setState({fcm_token});
+      });
+  }
 
   render() {
     return (
