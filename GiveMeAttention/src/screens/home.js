@@ -21,6 +21,7 @@ export default class HomeScreen extends React.Component {
   state = {
     uid: auth().currentUser.uid,
     username: '',
+    name: auth().currentUser.displayName,
     firendReq: [],
     friendsList: [],
     friendData: null,
@@ -157,9 +158,9 @@ export default class HomeScreen extends React.Component {
               <Text style={styles.topButtonText}>Friend Requests</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => console.log(2)}
+              onPress={this.signOutUser}
               style={styles.topButton}>
-              <Text style={styles.topButtonText}>Add Friend</Text>
+              <Text style={styles.topButtonText}>Logout</Text>
             </TouchableOpacity>
           </View>
           <Text style={styles.needAttention}>give me attention!</Text>
@@ -169,16 +170,14 @@ export default class HomeScreen extends React.Component {
             }}
             style={[styles.dp, styles.dpLarge]}
           />
-          <Text style={styles.username}>{this.state.username}</Text>
-          <TouchableOpacity onPress={this.signOutUser}>
-            <Text>Log Out</Text>
-          </TouchableOpacity>
+          <Text style={styles.username}>{this.state.name}</Text>
+          <Text>{this.state.username}</Text>
         </View>
         <View style={styles.header}>
           <View style={styles.headerButtonContainer}>
             <Button
               style={styles.headerButton}
-              label="Add BFFs"
+              label="Add Friends"
               onPress={() => this.props.navigation.navigate('AddFriend')}
             />
           </View>
