@@ -19,6 +19,7 @@
     "@react-native-firebase/messaging": "^7.0.1",
     "@react-native-firebase/storage": "^7.0.1",
     "@react-navigation/stack": "^5.3.7",
+    "fs": "^0.0.1-security",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "react": "16.11.0",

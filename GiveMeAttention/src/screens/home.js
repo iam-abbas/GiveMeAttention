@@ -46,6 +46,33 @@ export default class HomeScreen extends React.Component {
     return user.data();
   };
 
+  sendUserNotification = async userid => {
+    const user_data = await this.getProfileByUserID(userid);
+    fcm_token = user_data.fcmtoken;
+    console.log(fcm_token);
+    const FIREBASE_API_KEY = "AAAAU9pUIfA:APA91bFNiuUwGYRATBERB1T2F1fLOaYYl2cpJGPxdVufXdsut2jSTl1NquEeYAa73lIF1wekjundPbqt7eja4oxH8GXzU99GI_I281terZr5Soaa1UuKLtYNqoZHzJ-zk3jv6GYH9DBC";
+    const message = {
+      registration_ids: [fcm_token], 
+       notification: {
+         title: "Hello",
+         body: "Sup bruv",
+         "vibrate": 1,
+         "sound": 1,
+         "show_in_foreground": true,
+         "priority": "high",
+         "content_available": true,
+       },
+   }
+   let headers = new Headers({
+    "Content-Type": "application/json",
+    "Authorization": "key=" + FIREBASE_API_KEY
+  });
+
+  let response = await fetch("https://fcm.googleapis.com/fcm/send", { method: "POST", headers, body: JSON.stringify(message) })
+  response = await response.json();
+  console.log(response);
+  };
+
   fetchUserData = async () => {
     console.log('Loading data..');
     this.setState({friendData: null});
@@ -64,6 +91,11 @@ export default class HomeScreen extends React.Component {
     }
     this.setState({friendData});
   };
+
+  async componentDidMount() {
+    this.fetchUserData();
+    this.sendUserNotification(this.state.uid);
+  }
 
   render() {
     if (this.state.friendData === null) {
