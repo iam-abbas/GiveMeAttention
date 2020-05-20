@@ -7,7 +7,7 @@ import LoginScreen from './src/screens/login';
 import RegisterScreen from './src/screens/register';
 
 import HomeScreen from './src/screens/home';
-
+import AddFriendScreen from './src/screens/addfriends';
 import auth from '@react-native-firebase/auth';
 
 signOutUser = () => {
@@ -19,11 +19,13 @@ const AppTabNavigator = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: {
       headerShown: false,
-      // headerStyle: {
-      //   backgroundColor: "#ff8566",
-      //   elevation: 0,
-      //   shadowOpacity: 0,
-      // },
+      headerTintColor: '#fff',
+    },
+  },
+  AddFriend: {
+    screen: AddFriendScreen,
+    navigationOptions: {
+      headerShown: false,
       headerTintColor: '#fff',
     },
   },
@@ -34,11 +36,6 @@ const AuthStack = createStackNavigator({
     screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
-      // headerStyle: {
-      //   backgroundColor: "#ff8566",
-      //   elevation: 0,
-      //   shadowOpacity: 0,
-      // },
       headerTintColor: '#fff',
     },
   },
@@ -46,11 +43,6 @@ const AuthStack = createStackNavigator({
     screen: RegisterScreen,
     navigationOptions: {
       headerShown: false,
-      // headerStyle: {
-      //   backgroundColor: "#ff8566",
-      //   elevation: 0,
-      //   shadowOpacity: 0,
-      // },
       headerTintColor: '#fff',
     },
   },
@@ -64,7 +56,7 @@ export default createAppContainer(
       Auth: AuthStack,
     },
     {
-      initialRouteName: "Loading",
-    }
-  )
+      initialRouteName: 'Loading',
+    },
+  ),
 );

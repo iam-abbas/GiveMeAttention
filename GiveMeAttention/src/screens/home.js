@@ -59,16 +59,7 @@ export default class HomeScreen extends React.Component {
     }
     this.setState({friendData});
 
-    // firestore()
-    //   .collection('users')
-    //   .doc('EsEq6LK8jTXJ7BUh6KNUiG53IzG2')
-    //   .update(
-    //     'friendsList',
-    //     firestore.FieldValue.arrayUnion('fssssh'),
-    //   )
-    //   .then(() => {
-    //     console.log('Success');
-    //   });
+
   }
 
   render() {
@@ -120,7 +111,7 @@ export default class HomeScreen extends React.Component {
             <Button
               style={styles.headerButton}
               label="Add BFFs"
-              onPress={() => console.log('add friend')}
+              onPress={() => this.props.navigation.navigate("AddFriend")}
             />
           </View>
           <View style={styles.headerButtonContainer}>
