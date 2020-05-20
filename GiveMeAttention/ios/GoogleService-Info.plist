@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>360145232368-v0knjg5plrati79qg1mq9nc19b80fjsv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.360145232368-v0knjg5plrati79qg1mq9nc19b80fjsv</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>360145232368-1iid9fiqdeufpus5mbb5qqemt8ppab6m.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBPtPI_w_rEYyFwv91OMmT-mKVY85d6fMA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>360145232368</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.givemeattention</string>
+	<key>PROJECT_ID</key>
+	<string>givemeattention2-3c180</string>
+	<key>STORAGE_BUCKET</key>
+	<string>givemeattention2-3c180.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:360145232368:ios:5e63cf527661f344e67d35</string>
+	<key>DATABASE_URL</key>
+	<string>https://givemeattention2-3c180.firebaseio.com</string>
+</dict>
+</plist>
