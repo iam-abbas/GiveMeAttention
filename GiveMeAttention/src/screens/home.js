@@ -98,7 +98,6 @@ export default class HomeScreen extends React.Component {
 
   async componentDidMount() {
     this.fetchUserData();
-    this.sendUserNotification(this.state.uid);
   }
 
   renderFriends = () => {
@@ -113,7 +112,7 @@ export default class HomeScreen extends React.Component {
             alignItems: 'center',
             color: '#fff',
           }}>
-          <ActivityIndicator color={"#fff"} size="large" />
+          <ActivityIndicator color={'#fff'} size="large" />
         </View>
       );
     } else {
@@ -127,7 +126,7 @@ export default class HomeScreen extends React.Component {
                 imageURL="https://i.imgur.com/2D7TdPl.jpg"
                 name={friend.username}
                 onPress={() => {
-                  console.log(friend.username);
+                  this.sendUserNotification(fid);
                 }}
                 style={styles.contact}
               />
