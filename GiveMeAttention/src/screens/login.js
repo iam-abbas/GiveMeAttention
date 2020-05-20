@@ -1,15 +1,8 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-  LayoutAnimation,
-} from 'react-native';
+import * as React from 'react';
+import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
+import {Button} from '../common/Button';
+import {FormTextInput} from '../common/FormTextInput';
+import {COLOURS} from '../config/colors';
 import auth from '@react-native-firebase/auth';
 
 export default class LoginScreen extends React.Component {
@@ -28,121 +21,62 @@ export default class LoginScreen extends React.Component {
   };
 
   render() {
-    LayoutAnimation.easeInEaseOut();
-
     return (
-      <ScrollView contentContainerStyle={{backgroundColor: '#ff', flexGrow: 1}}>
-        <View style={styles.container}>
-          <View style={styles.errorMessage}>
-            {this.state.errorMessage && (
-              <Text style={styles.error}>{this.state.errorMessage}</Text>
-            )}
+      <View style={styles.container}>
+        <View style={styles.form}>
+          <Text style={styles.heading}>Login.</Text>
+          <FormTextInput
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+            returnKeyType="done"
+            label={'Email'}
+          />
+          <FormTextInput
+            value={this.state.password}
+            secureTextEntry={true}
+            returnKeyType="done"
+            onChangeText={password => this.setState({password})}
+            label={'Password'}
+          />
+          <View style={styles.actionButton}>
+            <Button label={'Login'} onPress={this.handleLogin} />
           </View>
-
-          <View style={styles.form}>
-            <View>
-              <Text style={styles.inputTitle}>Email Address</Text>
-              <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={email => this.setState({email})}
-                value={this.state.email}
-              />
-            </View>
-
-            <View style={{marginTop: 32}}>
-              <Text style={styles.inputTitle}>Password</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                autoCapitalize="none"
-                onChangeText={password => this.setState({password})}
-                value={this.state.password}
-              />
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-            <Text style={{color: '#FFF', fontWeight: '500'}}>Sign in</Text>
-          </TouchableOpacity>
-
           <TouchableOpacity
-            style={{alignSelf: 'center', marginTop: 32}}
             onPress={() => this.props.navigation.navigate('Register')}>
-            <Text style={{color: '#414959', marginBottom: 50, fontSize: 13}}>
-              Don't have an account?{' '}
-              <Text style={{fontWeight: '500', color: '#FEA02F'}}>Sign up</Text>
+            <Text style={styles.gotoRegister}>
+              Need an account? Click here to register.
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    marginTop: 70,
-    justifyContent: 'center',
-    fontSize: 46,
-    fontWeight: '600',
-    textAlign: 'center',
-    alignContent: 'center',
-    color: '#003F5A',
-    zIndex: 999,
-  },
-  greetingTop: {
-    marginTop: 32,
-    fontSize: 24,
-    fontWeight: '600',
-    paddingLeft: 30,
-  },
-  greeting: {
-    marginTop: 12,
-    fontSize: 24,
-    color: '#FEA02F',
-    fontWeight: '600',
-    paddingLeft: 30,
-  },
-  errorMessage: {
-    height: 72,
+    backgroundColor: COLOURS.DODGER_BLUE,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 30,
-  },
-  error: {
-    color: '#E9446A',
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
   },
   form: {
-    marginBottom: 48,
-    marginHorizontal: 30,
-  },
-  inputTitle: {
-    color: '#8A8F9E',
-    fontSize: 10,
-    textTransform: 'uppercase',
-  },
-  input: {
-    borderBottomColor: '#8A8F9E',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    height: 40,
-    fontSize: 15,
-    color: '#161F3D',
-  },
-  button: {
-    marginHorizontal: 30,
-    backgroundColor: '#FEA02F',
-    borderRadius: 4,
-    height: 52,
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
+    width: '80%',
+  },
+  actionButton: {
+    marginTop: 40,
+  },
+  heading: {
+    color: COLOURS.WHITE,
+    fontSize: 50,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  gotoRegister: {
+    color: COLOURS.DODGER_BLUE_LIGHTER,
+    marginVertical: 20,
+    textAlign: 'center',
   },
 });

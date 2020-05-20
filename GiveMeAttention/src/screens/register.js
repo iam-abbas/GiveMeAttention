@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 
 export default class RegisterScreen extends React.Component {
   constructor(props) {
@@ -17,9 +18,11 @@ export default class RegisterScreen extends React.Component {
       username: '',
       email: '',
       password: '',
+      fcm_token: null,
       errorMessage: null,
       userExists: false,
     };
+    this.validateForm = this.validateForm.bind(this);
   }
   checkUniqueUsername = uname => {
     firestore()
@@ -31,7 +34,31 @@ export default class RegisterScreen extends React.Component {
       });
   };
 
+  async validateForm() {
+    console.log('Validation');
+    if (
+      this.state.name.length < 1 ||
+      this.state.email.length < 1 ||
+      this.state.password.length < 1
+    ) {
+      this.setState({
+        errorMessage: 'Please complete all the fields.',
+      });
+    } else if (!this.state.userExists) {
+      if (this.state.username.length >= 5) {
+        this.handleSignUp();
+      } else {
+        this.setState({
+          errorMessage: 'Username too short. (min lenght: 5)',
+        });
+      }
+    } else {
+      this.setState({errorMessage: 'Username alerdy exists'});
+    }
+  }
+
   createUser = (uname, mailid, pname, userid) => {
+    console.log('Creating User...');
     firestore()
       .collection('users')
       .doc(userid)
@@ -39,9 +66,12 @@ export default class RegisterScreen extends React.Component {
         username: uname,
         name: pname,
         email: mailid,
+        fcmtoken: this.state.fcm_token,
+        friendsList: [],
+        friendRequestsList: [],
       })
       .then(() => {
-        console.log('User added!');
+        console.log('User created');
       });
     firestore()
       .collection('usernames')
@@ -50,7 +80,7 @@ export default class RegisterScreen extends React.Component {
         uid: userid,
       })
       .then(() => {
-        console.log('User added!');
+        console.log('Usename registered!');
       });
   };
 
@@ -58,21 +88,27 @@ export default class RegisterScreen extends React.Component {
     auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(userCredentials => {
-        createUser(
+        this.createUser(
           this.state.username,
           this.state.email,
           this.state.name,
           auth().currentUser.uid,
         );
-        // return userCredentials.user.updateProfile({
-        //   displayName: this.state.name,
-        // });
+        userCredentials.user.updateProfile({
+          displayName: this.state.name,
+        });
+        return console.log('Hi');
       })
       .catch(error => this.setState({errorMessage: error.message}));
   };
 
   componentDidMount() {
-    this.checkUniqueUsername;
+
+    messaging()
+      .getToken()
+      .then(fcm_token => {
+        return this.setState({fcm_token});
+      });
   }
 
   render() {
@@ -133,29 +169,7 @@ export default class RegisterScreen extends React.Component {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            if (
-              this.state.name.length < 1 ||
-              this.state.email.length < 1 ||
-              this.state.password.length < 1
-            ) {
-              this.setState({
-                errorMessage: 'Please complete all the fields.',
-              });
-            } else if (!this.state.userExists) {
-              if (this.state.username.length >= 5) {
-                this.handleSignUp();
-              } else {
-                this.setState({
-                  errorMessage: 'Username too short. (min lenght: 5)',
-                });
-              }
-            } else {
-              this.setState({errorMessage: 'Username alerdy exists'});
-            }
-          }}>
+        <TouchableOpacity style={styles.button} onPress={this.validateForm}>
           <Text style={{color: '#FFF', fontWeight: '500'}}>Sign up</Text>
         </TouchableOpacity>
 

@@ -262,6 +262,15 @@
     "@babel/helper-create-class-features-plugin" "^7.8.3"
     "@babel/helper-plugin-utils" "^7.8.3"
 
+"@babel/plugin-proposal-decorators@^7.8.3":
+  version "7.8.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.8.3.tgz#2156860ab65c5abf068c3f67042184041066543e"
+  integrity sha512-e3RvdvS4qPJVTe288DlXjwKflpfy1hr0j5dz5WpIYYeP7vQZg2WfAEIp8k5/Lwis/m5REXEteIz6rrcDtXXG7w==
+  dependencies:
+    "@babel/helper-create-class-features-plugin" "^7.8.3"
+    "@babel/helper-plugin-utils" "^7.8.3"
+    "@babel/plugin-syntax-decorators" "^7.8.3"
+
 "@babel/plugin-proposal-export-default-from@^7.0.0":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-export-default-from/-/plugin-proposal-export-default-from-7.8.3.tgz#4cb7c2fdeaed490b60d9bfd3dc8a20f81f9c2e7c"
@@ -307,6 +316,13 @@
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-class-properties/-/plugin-syntax-class-properties-7.8.3.tgz#6cb933a8872c8d359bfde69bbeaae5162fd1e8f7"
   integrity sha512-UcAyQWg2bAN647Q+O811tG9MrJ38Z10jjhQdKNAL8fsyPzE3cCN/uT+f55cFVY4aGO4jqJAvmqsuY3GQDwAoXg==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.8.3"
+
+"@babel/plugin-syntax-decorators@^7.8.3":
+  version "7.8.3"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-decorators/-/plugin-syntax-decorators-7.8.3.tgz#8d2c15a9f1af624b0025f961682a9d53d3001bda"
+  integrity sha512-8Hg4dNNT9/LcA1zQlfwuKR8BUc/if7Q7NkTam9sGTcJphLwpf2g4S42uhspQrIrR+dpzE0dtTqBVFoHl8GtnnQ==
   dependencies:
     "@babel/helper-plugin-utils" "^7.8.3"
 
@@ -1010,6 +1026,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-7.0.2.tgz#032da9da7302461557edc0e3aae0806660efc43c"
   integrity sha512-1JPgzeaNve5QXaZD4OrUtmstFEbuZBiAl50RSSgnRPNkMxgjHxMlZvGKX53OeOoOVaG6JDZoG8hTHjSn1G4VXA==
 
+"@react-native-firebase/database@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/database/-/database-7.0.1.tgz#f878390478e9ea4f95bcacfc07968cc12a9830a2"
+  integrity sha512-Fj5QZNdmYE4HA0mZgnjnubz0W1qe5DhR8KbxNcmOd40dsN8vGm024ZV0an2i4VCAmfNciT1IEM++hRhce4Nafg==
+
 "@react-native-firebase/firestore@^7.0.1":
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-7.0.1.tgz#29b7caca7e7ce823895b93377bcde5f1f9d71186"
@@ -1042,6 +1063,14 @@
   dependencies:
     hoist-non-react-statics "^3.3.2"
     react-native-safe-area-view "^0.14.9"
+
+"@react-navigation/stack@^5.3.7":
+  version "5.3.7"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.3.7.tgz#192cf455f34fb6164bd01c81147b06a0f8d19d97"
+  integrity sha512-OPU3yI3bf9oFVEMfCCfQ9G4+KIYUpelZ2s1U6QiMz9iQUUhplvsQm6d6cdO7xPi/eiTQJ9m/XG6Kt4P/kGbd4Q==
+  dependencies:
+    color "^3.1.2"
+    react-native-iphone-x-helper "^1.2.1"
 
 "@types/babel__core@^7.1.0":
   version "7.1.7"
@@ -4505,6 +4534,23 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.5"
 
+mobx-react-lite@2:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-2.0.7.tgz#1bfb3b4272668e288047cf0c7940b14e91cba284"
+  integrity sha512-YKAh2gThC6WooPnVZCoC+rV1bODAKFwkhxikzgH18wpBjkgTkkR9Sb0IesQAH5QrAEH/JQVmy47jcpQkf2Au3Q==
+
+mobx-react@^6.2.2:
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-6.2.2.tgz#45e8e7c4894cac8399bba0a91060d7cfb8ea084b"
+  integrity sha512-Us6V4ng/iKIRJ8pWxdbdysC6bnS53ZKLKlVGBqzHx6J+gYPYbOotWvhHZnzh/W5mhpYXxlXif4kL2cxoWJOplQ==
+  dependencies:
+    mobx-react-lite "2"
+
+mobx@^5.15.4:
+  version "5.15.4"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.4.tgz#9da1a84e97ba624622f4e55a0bf3300fb931c2ab"
+  integrity sha512-xRFJxSU2Im3nrGCdjSuOTFmxVDGeqOHL+TyADCGbT0k4HHqGmx5u2yaHNryvoORpI4DfbzjJ5jPmuv+d7sioFw==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -5055,7 +5101,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.9, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5139,10 +5185,21 @@ react-native-gesture-handler@^1.6.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-ionicons@^5.0.0-rc:
+  version "5.0.0-rc"
+  resolved "https://registry.yarnpkg.com/react-native-ionicons/-/react-native-ionicons-5.0.0-rc.tgz#07e96279ddaa789c15a14564c091937cb33eba91"
+  integrity sha512-sxGRilnejot/n1GFwUrAzOgZeF9sHJzpV6AcwQKR8q5U9k+ZCgDHq5ajrSn82A4b5TDv6F0aPJTDB2/9/EuVcw==
+
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
   integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
+
+"react-native-material-textfield@git+https://github.com/javarahulsharma/react-native-material-textfield.git":
+  version "0.16.1"
+  resolved "git+https://github.com/javarahulsharma/react-native-material-textfield.git#e04f9d9c185ee5bdda2190e62ecbfab007f882e2"
+  dependencies:
+    prop-types "^15.5.9"
 
 react-native-safe-area-context@^1.0.2:
   version "1.0.2"
