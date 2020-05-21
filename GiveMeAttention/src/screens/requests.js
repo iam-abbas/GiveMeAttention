@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {COLOURS} from '../config/colors';
 import {RequestsCard} from '../common/RequestCard';
@@ -112,9 +113,11 @@ export default class RequestsScreen extends React.Component {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
+        <SafeAreaView>
         <View style={styles.banner}>
           <Text style={styles.bannerHeading}>Friend Requests</Text>
         </View>
+        </SafeAreaView>
         <View style={styles.requests}>
           {this.state.friendRequestsList.map((fid, key) => {
             let friend = this.state.friendData[fid];
