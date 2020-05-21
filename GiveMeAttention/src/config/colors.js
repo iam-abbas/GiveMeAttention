@@ -9,6 +9,7 @@ export const COLOURS = {
     LIGHT_SILVER: "#EEEEEE",
     SILVER: "#BEBEBE",
     TORCH_RED: "#F8262F",
+    ROYAL_RED: "#E53935",
     MISCHKA: "#E5E4E6",
     GOLDEN: "#FFD54F",
     PURPLE: "#AB47BC",

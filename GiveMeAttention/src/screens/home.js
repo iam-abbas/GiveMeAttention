@@ -190,6 +190,11 @@ export default class HomeScreen extends React.Component {
               onPress={() => this.props.navigation.navigate('FriendRequests')}
               style={styles.topButton}>
               <Text style={styles.topButtonText}>Friend Requests</Text>
+              {
+                this.state.firendReq.length ?
+                <View style={styles.newIndicator} /> :
+                null
+              }
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.signOutUser}
@@ -264,10 +269,12 @@ const styles = StyleSheet.create({
   },
   topButton: {
     padding: 15,
+    flexDirection: 'row',
   },
   topButtonText: {
     color: COLOURS.DODGER_BLUE,
     fontWeight: 'bold',
+    lineHeight: 20,
   },
   dp: {
     width: Dimensions.get('window').width * 0.2,
@@ -300,4 +307,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 30,
   },
+  newIndicator: {
+    height: 10,
+    width: 10,
+    margin: 5,
+    borderRadius: 12,
+    backgroundColor: COLOURS.ROYAL_RED
+  }
 });
