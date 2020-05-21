@@ -15,10 +15,6 @@ import {LeaderboardCard} from '../common/LeaderboardCard';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-function sortByProp(data, prop) {
-  return new Map([...data.entries()].sort((a, b) => a[1][prop] > b[1][prop]));
-}
-
 export default class LeaderboardScreen extends React.Component {
   state = {
     uid: auth().currentUser.uid,
@@ -46,7 +42,13 @@ export default class LeaderboardScreen extends React.Component {
       let data = await this.getProfileByUserID(item);
       people[item] = data;
     }
-    people = sortByProp(people, 'points');
+    people = Object.keys(people)
+      .sort(function(a, b) {
+        return people[a].firstName.localeCompare(people[b].firstName);
+      })
+      .map(function(k) {
+        return people[k];
+      });
     this.setState({people});
   };
 
@@ -71,9 +73,8 @@ export default class LeaderboardScreen extends React.Component {
     } else {
       var key = 0;
       var output = [];
-      for (var fid in this.state.people) {
+      for (var friend of this.state.people) {
         key++;
-        let friend = this.state.people[fid];
         var tempItem = (
           <View key={key}>
             <LeaderboardCard
@@ -115,7 +116,7 @@ export default class LeaderboardScreen extends React.Component {
             {Object.keys(this.state.people)[1] ? (
               <Image
                 source={{
-                  uri: this.state.people[Object.keys(this.state.people)[1]].avatar,
+                  uri: this.state.people[1]['avatar'],
                 }}
                 style={[styles.dp, styles.dpSecondPlace]}
               />
@@ -123,7 +124,7 @@ export default class LeaderboardScreen extends React.Component {
             {Object.keys(this.state.people)[0] ? (
               <Image
                 source={{
-                  uri: this.state.people[Object.keys(this.state.people)[0]].avatar,
+                  uri: this.state.people[0]['avatar'],
                 }}
                 style={[styles.dp, styles.dpLarge, styles.dpFirstPlace]}
               />
@@ -131,7 +132,7 @@ export default class LeaderboardScreen extends React.Component {
             {Object.keys(this.state.people)[2] ? (
               <Image
                 source={{
-                  uri: this.state.people[Object.keys(this.state.people)[2]].avatar,
+                  uri: this.state.people[2]['avatar'],
                 }}
                 style={[styles.dp, styles.dpThirdPlace]}
               />
