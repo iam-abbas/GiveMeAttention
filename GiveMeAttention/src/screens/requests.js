@@ -82,6 +82,7 @@ export default class RequestsScreen extends React.Component {
       .collection('users')
       .doc(uid)
       .get();
+    console.log(userData.data().friendRequestsList);
     this.setState({friendRequestsList: userData.data().friendRequestsList});
     let friendData = {};
     for (var item of this.state.friendRequestsList) {

@@ -62,8 +62,8 @@ export default class HomeScreen extends React.Component {
     const message = {
       registration_ids: [fcm_token],
       notification: {
-        title: 'Hello',
-        body: 'Sup bruv',
+        title: 'GiveMeAttention',
+        body: this.state.name + ' needs attention!',
         vibrate: 1,
         sound: 1,
         show_in_foreground: true,
@@ -190,6 +190,11 @@ export default class HomeScreen extends React.Component {
               onPress={() => this.props.navigation.navigate('FriendRequests')}
               style={styles.topButton}>
               <Text style={styles.topButtonText}>Friend Requests</Text>
+              {
+                this.state.firendReq.length ?
+                <View style={styles.newIndicator} /> :
+                null
+              }
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.signOutUser}
@@ -242,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   banner: {
-    height: Dimensions.get('window').height * 0.475,
+    height: Dimensions.get('window').height * 0.5,
     borderBottomLeftRadius: Dimensions.get('window').width,
     borderBottomRightRadius: Dimensions.get('window').width,
     backgroundColor: COLOURS.WHITE,
@@ -264,15 +269,17 @@ const styles = StyleSheet.create({
   },
   topButton: {
     padding: 15,
+    flexDirection: 'row',
   },
   topButtonText: {
     color: COLOURS.DODGER_BLUE,
     fontWeight: 'bold',
+    lineHeight: 20,
   },
   dp: {
-    width: Dimensions.get('window').width * 0.2,
-    height: Dimensions.get('window').width * 0.2,
-    borderRadius: Dimensions.get('window').width * 0.2,
+    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').width * 0.4,
+    borderRadius: Dimensions.get('window').width * 0.4,
   },
   dpLarge: {
     marginTop: 30,
@@ -300,4 +307,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 30,
   },
+  newIndicator: {
+    height: 10,
+    width: 10,
+    margin: 5,
+    borderRadius: 12,
+    backgroundColor: COLOURS.ROYAL_RED
+  }
 });

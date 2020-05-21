@@ -24,12 +24,13 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.4,
     alignItems: "center",
     marginVertical: 15,
-    marginHorizontal: 15
+    marginHorizontal: 0
   },
   image: {
-    width: Dimensions.get('window').width * 0.4,
-    height: Dimensions.get('window').width * 0.4,
-    borderRadius: Dimensions.get('window').width * 0.4
+    width: Dimensions.get('window').width * 0.35,
+    height: Dimensions.get('window').width * 0.35,
+    borderRadius: Dimensions.get('window').width * 0.35,
+    marginBottom: 15,
   },
   text: {
     fontSize: 22,
