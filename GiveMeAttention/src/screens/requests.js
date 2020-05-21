@@ -114,23 +114,31 @@ export default class RequestsScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <SafeAreaView>
-        <View style={styles.banner}>
-          <Text style={styles.bannerHeading}>Friend Requests</Text>
-        </View>
+          <View style={styles.banner}>
+            <Text style={styles.bannerHeading}>Friend Requests</Text>
+          </View>
         </SafeAreaView>
         <View style={styles.requests}>
-          {this.state.friendRequestsList.map((fid, key) => {
-            let friend = this.state.friendData[fid];
-            return (
-              <RequestsCard
-                key={key}
-                userAvatar={friend.avatar}
-                username={friend.username}
-                onConfirm={() => this.confirmFriend(fid)}
-                onIgnore={() => this.ignoreFriend(fid)}
-              />
-            );
-          })}
+          {this.state.friendRequestsList.length ? (
+            this.state.friendRequestsList.map((fid, key) => {
+              let friend = this.state.friendData[fid];
+              return (
+                <RequestsCard
+                  key={key}
+                  userAvatar={friend.avatar}
+                  username={friend.username}
+                  onConfirm={() => this.confirmFriend(fid)}
+                  onIgnore={() => this.ignoreFriend(fid)}
+                />
+              );
+            })
+          ) : (
+            <View style={styles.noFriends}>
+              <Text style={styles.noFriendsText}>
+                You do not have friends :(
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     );
@@ -168,5 +176,16 @@ const styles = StyleSheet.create({
   requests: {
     width: '100%',
     marginTop: 20,
+  },
+  noFriends: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noFriendsText: {
+    color: '#fff',
+    paddingTop: 40,
+    fontWeight: '600',
+    fontSize: 18,
   },
 });
