@@ -62,6 +62,7 @@
 		8B2D0CEA0943D2A0EC6BBFD7 /* libPods-GiveMeAttention.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GiveMeAttention.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C8EBEF50D083C627348E15A /* Pods-GiveMeAttention-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GiveMeAttention-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-GiveMeAttention-tvOSTests/Pods-GiveMeAttention-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9372BA0033B6E32DD8303D1D /* libPods-GiveMeAttention-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GiveMeAttention-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9836917F24763F1D003ACC02 /* GiveMeAttention.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = GiveMeAttention.entitlements; path = GiveMeAttention/GiveMeAttention.entitlements; sourceTree = "<group>"; };
 		98BD48712475DCB200EF5A55 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BCF4E092F98818AF694D307B /* libPods-GiveMeAttention-GiveMeAttentionTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GiveMeAttention-GiveMeAttentionTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0A15B8784213E314076EBE4 /* Pods-GiveMeAttention-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GiveMeAttention-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-GiveMeAttention-tvOS/Pods-GiveMeAttention-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -127,6 +128,7 @@
 		13B07FAE1A68108700A75B9A /* GiveMeAttention */ = {
 			isa = PBXGroup;
 			children = (
+				9836917F24763F1D003ACC02 /* GiveMeAttention.entitlements */,
 				98BD48712475DCB200EF5A55 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -297,6 +299,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = BCGTJK33VA;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -681,7 +684,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = GiveMeAttention/GiveMeAttention.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BCGTJK33VA;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -694,7 +699,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.givemeattention;
 				PRODUCT_NAME = GiveMeAttention;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -708,7 +713,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = GiveMeAttention/GiveMeAttention.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BCGTJK33VA;
 				INFOPLIST_FILE = GiveMeAttention/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -716,7 +723,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.givemeattention;
 				PRODUCT_NAME = GiveMeAttention;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
