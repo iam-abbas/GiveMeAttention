@@ -62,8 +62,8 @@ export default class HomeScreen extends React.Component {
     const message = {
       registration_ids: [fcm_token],
       notification: {
-        title: 'Hello',
-        body: 'Sup bruv',
+        title: 'GiveMeAttention',
+        body: this.state.name + ' needs attention!',
         vibrate: 1,
         sound: 1,
         show_in_foreground: true,
