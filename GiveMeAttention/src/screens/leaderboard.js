@@ -31,30 +31,36 @@ export default class LeaderboardScreen extends React.Component {
     return user.data();
   };
 
-  getFirendsList = async () => {
-    const uid = this.state.uid;
-    const userData = await firestore()
-      .collection('users')
-      .doc(uid)
-      .get();
-    this.setState({friendsList: userData.data().friendsList});
-    let people = {};
-    for (var item of this.state.friendsList) {
-      let data = await this.getProfileByUserID(item);
-      people[item] = data;
+  getFirendsList = async QuerySnapshot => {
+    console.log('Getting friends');
+    if (QuerySnapshot) {
+      let userData = QuerySnapshot;
+      this.setState({friendsList: userData.data().friendsList});
+      let people = {};
+      for (var item of this.state.friendsList) {
+        let data = await this.getProfileByUserID(item);
+        people[item] = data;
+      }
+      people = Object.keys(people)
+        .sort(function(a, b) {
+          return people[a].points.toString().localeCompare(people[b].points);
+        })
+        .map(function(k) {
+          return people[k];
+        });
+      this.setState({people});
     }
-    people = Object.keys(people)
-      .sort(function(a, b) {
-        console.log(people, a, b)
-        return people[b].points.toString().localeCompare(people[a].points);
-      })
-      .map(function(k) {
-        return people[k];
-      });
-    this.setState({people});
   };
 
+  onError = error => {
+    console.log(error);
+  };
   async componentDidMount() {
+    const uid = this.state.uid;
+    firestore()
+      .collection('users')
+      .doc(uid)
+      .onSnapshot(this.getFirendsList, this.onError);
     this.getFirendsList();
   }
 
