@@ -30,7 +30,6 @@
     "react-native-image-picker": "^2.3.1",
     "react-native-ionicons": "^5.0.0-rc",
     "react-native-material-textfield": "git+https://github.com/javarahulsharma/react-native-material-textfield.git",
-    "react-native-permission": "0.0.1",
     "react-native-permissions": "^2.1.4",
     "react-native-safe-area-context": "^1.0.2",
     "react-native-screens": "^2.7.0",
