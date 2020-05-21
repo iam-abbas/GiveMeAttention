@@ -198,7 +198,7 @@ export default class HomeScreen extends React.Component {
             </TouchableOpacity>
           </View>
           </SafeAreaView>
-          <Text style={styles.needAttention}>give me attention!</Text>
+          <Text style={styles.needAttention}>Give Me Attention</Text>
           <Image
             source={{
               uri: this.state.avatar,
