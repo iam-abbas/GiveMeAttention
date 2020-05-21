@@ -247,12 +247,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   banner: {
-    height: Dimensions.get('window').height * 0.5,
     borderBottomLeftRadius: Dimensions.get('window').width,
     borderBottomRightRadius: Dimensions.get('window').width,
     backgroundColor: COLOURS.WHITE,
     width: '170%',
     alignItems: 'center',
+    paddingBottom: 42,
   },
   needAttention: {
     color: COLOURS.DODGER_BLUE,
