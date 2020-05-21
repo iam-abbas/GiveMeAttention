@@ -4,11 +4,17 @@ import {
   Text,
   StyleSheet,
   TextInput,
+  Platform,
   TouchableOpacity,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
+import ImagePicker from 'react-native-image-picker';
+import {check, PERMISSIONS, request} from 'react-native-permissions';
+import {Button} from '../common/Button';
+import {FormTextInput} from '../common/FormTextInput';
+import {COLOURS} from '../config/colors';
 
 export default class RegisterScreen extends React.Component {
   constructor(props) {
@@ -40,6 +46,60 @@ export default class RegisterScreen extends React.Component {
       .then(documentSnapshot => {
         return this.setState({userExists: documentSnapshot.exists});
       });
+  };
+
+  handlePickAvatar = async () => {
+    // Get permission
+    check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+      .then(result => {
+        console.log(result);
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log(
+              'This feature is not available (on this device / in this context)',
+            );
+            break;
+          case RESULTS.DENIED:
+            'The permission has not been requested / is denied but requestable',
+              request(
+                Platform.select({
+                  android: PERMISSIONS.ANDROID.CAMERA,
+                  ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+                }),
+              );
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            break;
+        }
+      })
+      .catch(error => {
+        // No errors lol
+      });
+
+    // Get the image
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = {uri: response.uri};
+        this.avatar = response.uri;
+      }
+    });
   };
 
   async validateForm() {

@@ -47,8 +47,15 @@ export default class HomeScreen extends React.Component {
     return user.data();
   };
 
-  sendUserNotification = async userid => {
-    const user_data = await this.getProfileByUserID(userid);
+  sendUserNotification = async username => {
+    console.log(username);
+    const user_prof = await firestore()
+      .collection('usernames')
+      .doc(username)
+      .get();
+    var f_id = user_prof.data().uid;
+    console.log(f_id);
+    const user_data = await this.getProfileByUserID(f_id);
     var fcm_token = user_data.fcmtoken;
     const FIREBASE_API_KEY =
       'AAAAU9pUIfA:APA91bFNiuUwGYRATBERB1T2F1fLOaYYl2cpJGPxdVufXdsut2jSTl1NquEeYAa73lIF1wekjundPbqt7eja4oxH8GXzU99GI_I281terZr5Soaa1UuKLtYNqoZHzJ-zk3jv6GYH9DBC';
@@ -77,7 +84,7 @@ export default class HomeScreen extends React.Component {
     response = await response.json();
     await firestore()
       .collection('users')
-      .doc(userid)
+      .doc(f_id)
       .update('points', firestore.FieldValue.increment(1))
       .then(() => {
         console.log('Increased points');
@@ -127,6 +134,7 @@ export default class HomeScreen extends React.Component {
       for (var fid in this.state.friendData) {
         key++;
         let friend = this.state.friendData[fid];
+        console.log(fid);
         var tempItem = (
           <View key={key}>
             <ContactCard
@@ -134,7 +142,7 @@ export default class HomeScreen extends React.Component {
               imageURL="https://i.imgur.com/2D7TdPl.jpg"
               name={friend.username}
               onPress={() => {
-                this.sendUserNotification(fid);
+                this.sendUserNotification(friend.username);
               }}
               style={styles.contact}
             />
