@@ -31,7 +31,6 @@ export default class RequestsScreen extends React.Component {
   };
 
   confirmFriend = async userid => {
-    console.log(userid);
     firestore()
       .collection('users')
       .doc(this.state.uid)
@@ -54,14 +53,13 @@ export default class RequestsScreen extends React.Component {
         console.log('Added to users friendlist');
       });
     let newFL = this.state.friendRequestsList;
-    newFL.splice(newFL.indexOf(userid));
+    newFL.splice(newFL.indexOf(userid), 1);
     this.setState({friendRequestsList: newFL});
     let friends = this.state.friendData;
     delete friends[userid];
     this.setState({friendData: friends});
   };
   ignoreFriend = async userid => {
-    console.log(userid);
     firestore()
       .collection('users')
       .doc(this.state.uid)
@@ -70,7 +68,7 @@ export default class RequestsScreen extends React.Component {
         console.log('Removed from friend list');
       });
     let newFL = this.state.friendRequestsList;
-    newFL.splice(newFL.indexOf(userid));
+    newFL.splice(newFL.indexOf(userid), 1);
     this.setState({friendRequestsList: newFL});
     let friends = this.state.friendData;
     delete friends[userid];
@@ -110,7 +108,6 @@ export default class RequestsScreen extends React.Component {
         </View>
       );
     }
-    console.log('requests: ', this.state.friendData);
     return (
       <ScrollView
         style={styles.container}
