@@ -123,7 +123,7 @@ export default class LeaderboardScreen extends React.Component {
         contentContainerStyle={styles.containerContent}>
         <View style={styles.banner}>
           <SafeAreaView>
-            <Text style={styles.needAttention}>top attention givers!</Text>
+            <Text style={styles.needAttention}>Most Received</Text>
           </SafeAreaView>
           <View style={styles.topThree}>
             {Object.keys(this.state.people)[1] ? (

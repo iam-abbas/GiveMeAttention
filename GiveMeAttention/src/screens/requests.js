@@ -136,7 +136,7 @@ export default class RequestsScreen extends React.Component {
           ) : (
             <View style={styles.noFriends}>
               <Text style={styles.noFriendsText}>
-                You do not have friends :(
+                You do not have any friend requests :(
               </Text>
             </View>
           )}
