@@ -49,13 +49,11 @@ export default class HomeScreen extends React.Component {
   };
 
   sendUserNotification = async username => {
-    console.log(username);
     const user_prof = await firestore()
       .collection('usernames')
       .doc(username)
       .get();
     var f_id = user_prof.data().uid;
-    console.log(f_id);
     const user_data = await this.getProfileByUserID(f_id);
     var fcm_token = user_data.fcmtoken;
     const FIREBASE_API_KEY =
@@ -92,31 +90,42 @@ export default class HomeScreen extends React.Component {
       });
   };
 
-  fetchUserData = async () => {
+  fetchUserData = async QuerySnapshot => {
     console.log('Loading data..');
-    this.setState({friendData: null});
-    const uid = this.state.uid;
-    const userData = await firestore()
-      .collection('users')
-      .doc(uid)
-      .get();
-    if (userData.exists) {
-      this.setState({username: userData.data().username});
-      this.setState({name: userData.data().name});
-      this.setState({firendReq: userData.data().friendRequestsList});
-      this.setState({friendsList: userData.data().friendsList});
-      this.setState({avatar: userData.data().avatar});
+    if (QuerySnapshot) {
+      // this.setState({friendData: null});
+      const uid = this.state.uid;
+      let userData = QuerySnapshot;
+      if (userData.exists) {
+        this.setState({username: userData.data().username});
+        this.setState({name: userData.data().name});
+        this.setState({firendReq: userData.data().friendRequestsList});
+        this.setState({friendsList: userData.data().friendsList});
+        this.setState({avatar: userData.data().avatar});
 
-      let friendData = {};
-      for (var item of this.state.friendsList) {
-        let data = await this.getProfileByUserID(item);
-        friendData[item] = data;
+        let friendData = {};
+        for (var item of this.state.friendsList) {
+          let data = await this.getProfileByUserID(item);
+          friendData[item] = data;
+        }
+        this.setState({friendData});
+      } else {
+        this.fetchUserData();
       }
-      this.setState({friendData});
-    } else {
-      this.fetchUserData();
     }
   };
+
+  onError = error => {
+    console.log(error);
+  };
+  async componentDidMount() {
+    const uid = this.state.uid;
+    firestore()
+      .collection('users')
+      .doc(uid)
+      .onSnapshot(this.fetchUserData, this.onError);
+    this.fetchUserData();
+  }
 
   renderFriends = () => {
     if (this.state.friendData === null) {
@@ -137,7 +146,6 @@ export default class HomeScreen extends React.Component {
       for (var fid in this.state.friendData) {
         key++;
         let friend = this.state.friendData[fid];
-        console.log(fid);
         var tempItem = (
           <View key={key}>
             <ContactCard
