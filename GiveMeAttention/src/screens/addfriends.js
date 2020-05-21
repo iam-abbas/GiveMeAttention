@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, ScrollView, StyleSheet, Dimensions, Text} from 'react-native';
+import {View, ScrollView, StyleSheet, Dimensions, Text, SafeAreaView} from 'react-native';
 import {COLOURS} from '../config/colors';
 import {FormTextInput} from '../common/FormTextInput';
 import {Button} from '../common/Button';
@@ -52,9 +52,11 @@ export default class AddFriendScreen extends React.Component {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
+        <SafeAreaView>
         <View style={styles.banner}>
           <Text style={styles.bannerHeading}>Add Friend</Text>
         </View>
+        </SafeAreaView>
         <View style={styles.form}>
           <Text>{this.state.message}</Text>
           <FormTextInput

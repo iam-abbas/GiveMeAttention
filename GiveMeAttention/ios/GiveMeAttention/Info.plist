@@ -53,5 +53,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+  <key>NSCameraUsageDescription</key>
+  <string>Need the camera</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Need the library</string>
+
 </dict>
 </plist>

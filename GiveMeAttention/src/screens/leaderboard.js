@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import {Button} from '../common/Button';
 import {FormTextInput} from '../common/FormTextInput';
@@ -118,7 +119,9 @@ export default class LeaderboardScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <View style={styles.banner}>
+        <SafeAreaView>
           <Text style={styles.needAttention}>top attention givers!</Text>
+          </SafeAreaView>
           <View style={styles.topThree}>
             {Object.keys(this.state.people)[1] ? (
               <Image
