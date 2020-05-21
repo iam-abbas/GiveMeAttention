@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   banner: {
-    height: Dimensions.get('window').height * 0.475,
+    height: Dimensions.get('window').height * 0.5,
     borderBottomLeftRadius: Dimensions.get('window').width,
     borderBottomRightRadius: Dimensions.get('window').width,
     backgroundColor: COLOURS.WHITE,
@@ -277,9 +277,9 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   dp: {
-    width: Dimensions.get('window').width * 0.2,
-    height: Dimensions.get('window').width * 0.2,
-    borderRadius: Dimensions.get('window').width * 0.2,
+    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').width * 0.4,
+    borderRadius: Dimensions.get('window').width * 0.4,
   },
   dpLarge: {
     marginTop: 30,
