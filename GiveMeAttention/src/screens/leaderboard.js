@@ -44,7 +44,8 @@ export default class LeaderboardScreen extends React.Component {
     }
     people = Object.keys(people)
       .sort(function(a, b) {
-        return people[a].firstName.localeCompare(people[b].firstName);
+        console.log(people, a, b)
+        return people[b].points.toString().localeCompare(people[a].points);
       })
       .map(function(k) {
         return people[k];
