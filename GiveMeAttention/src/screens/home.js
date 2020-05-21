@@ -176,6 +176,7 @@ export default class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <View style={styles.banner}>
+        <SafeAreaView>
           <View style={styles.topBar}>
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('FriendRequests')}
@@ -188,6 +189,7 @@ export default class HomeScreen extends React.Component {
               <Text style={styles.topButtonText}>Logout</Text>
             </TouchableOpacity>
           </View>
+          </SafeAreaView>
           <Text style={styles.needAttention}>give me attention!</Text>
           <Image
             source={{
