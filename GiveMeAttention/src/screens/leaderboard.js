@@ -31,26 +31,37 @@ export default class LeaderboardScreen extends React.Component {
     return user.data();
   };
 
+  nestedSort = (prop1, prop2 = null, direction = 'asc') => (e1, e2) => {
+    const a = prop2 ? e1[prop1][prop2] : e1[prop1],
+      b = prop2 ? e2[prop1][prop2] : e2[prop1],
+      sortOrder = direction === 'asc' ? 1 : -1;
+    return a < b ? -sortOrder : a > b ? sortOrder : 0;
+  };
+
   getFirendsList = async QuerySnapshot => {
     console.log('Getting friends');
     if (QuerySnapshot) {
       let userData = QuerySnapshot;
       this.setState({friendsList: userData.data().friendsList});
-      let people = {};
-      people[this.state.uid] = await this.getProfileByUserID(this.state.uid);
-      console.log(people);
+      let people = [];
+      // people[this.state.uid] = await this.getProfileByUserID(this.state.uid);
       for (var item of this.state.friendsList) {
+        // let temp = {};
         let data = await this.getProfileByUserID(item);
-        people[item] = data;
+        // temp[item] = data;
+        // console.log(temp);
+        people.push(data);
       }
-      console.log(Array(people));
-      people = Object.keys(people)
-        .sort(function(a, b) {
-          return people[a].points.toString().localeCompare(people[b].points);
-        })
-        .map(function(k) {
-          return people[k];
-        });
+      // console.log(people);
+      // people = Object.keys(people)
+      //   .sort(function(a, b) {
+      //     return people[a].points.toString().localeCompare(people[b].points);
+      //   })
+      //   .map(function(k) {
+      //     return people[k];
+      //   });
+
+      people.sort(this.nestedSort('points', null, 'desc'));
       this.setState({people});
     }
   };
