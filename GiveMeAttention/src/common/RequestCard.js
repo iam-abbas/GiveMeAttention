@@ -12,10 +12,6 @@ import {COLOURS} from '../config/colors';
 export class RequestsCard extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      profilePictureURL: 'https://i.imgur.com/2D7TdPl.jpg',
-    };
   }
 
   async componentDidMount() {
@@ -28,7 +24,7 @@ export class RequestsCard extends React.Component {
       <View style={[styles.container]}>
         <View style={styles.leftSide}>
           <Image
-            source={{uri: this.state.profilePictureURL}}
+            source={{uri: this.props.userAvatar}}
             style={styles.image}
           />
           <Text style={[styles.name, styles.text]}>{this.props.username}</Text>

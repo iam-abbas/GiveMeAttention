@@ -15,6 +15,10 @@ import {LeaderboardCard} from '../common/LeaderboardCard';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+function sortByProp(data, prop) {
+  return new Map([...data.entries()].sort((a, b) => a[1][prop] > b[1][prop]));
+}
+
 export default class LeaderboardScreen extends React.Component {
   state = {
     uid: auth().currentUser.uid,
@@ -42,6 +46,7 @@ export default class LeaderboardScreen extends React.Component {
       let data = await this.getProfileByUserID(item);
       people[item] = data;
     }
+    people = sortByProp(people, 'points');
     this.setState({people});
   };
 
@@ -72,7 +77,7 @@ export default class LeaderboardScreen extends React.Component {
         var tempItem = (
           <View key={key}>
             <LeaderboardCard
-              profilePicture="https://i.imgur.com/2D7TdPl.jpg"
+              profilePicture={friend.avatar}
               username={friend.username}
               score={friend.points}
               rank={key}
@@ -100,7 +105,6 @@ export default class LeaderboardScreen extends React.Component {
         </View>
       );
     }
-    console.log(this.state.people[0]);
     return (
       <ScrollView
         style={styles.container}
@@ -108,26 +112,26 @@ export default class LeaderboardScreen extends React.Component {
         <View style={styles.banner}>
           <Text style={styles.needAttention}>top attention givers!</Text>
           <View style={styles.topThree}>
-            {this.state.friendsList[1] ? (
+            {Object.keys(this.state.people)[1] ? (
               <Image
                 source={{
-                  uri: 'https://i.imgur.com/2D7TdPl.jpg',
+                  uri: this.state.people[Object.keys(this.state.people)[1]].avatar,
                 }}
                 style={[styles.dp, styles.dpSecondPlace]}
               />
             ) : null}
-            {this.state.friendsList[0] ? (
+            {Object.keys(this.state.people)[0] ? (
               <Image
                 source={{
-                  uri: 'https://i.imgur.com/2D7TdPl.jpg',
+                  uri: this.state.people[Object.keys(this.state.people)[0]].avatar,
                 }}
                 style={[styles.dp, styles.dpLarge, styles.dpFirstPlace]}
               />
             ) : null}
-            {this.state.friendsList[2] ? (
+            {Object.keys(this.state.people)[2] ? (
               <Image
                 source={{
-                  uri: 'https://i.imgur.com/2D7TdPl.jpg',
+                  uri: this.state.people[Object.keys(this.state.people)[2]].avatar,
                 }}
                 style={[styles.dp, styles.dpThirdPlace]}
               />

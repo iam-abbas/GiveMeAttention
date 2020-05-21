@@ -21,7 +21,8 @@ export default class HomeScreen extends React.Component {
   state = {
     uid: auth().currentUser.uid,
     username: '',
-    name: auth().currentUser.displayName,
+    name: '',
+    avatar: 'https://i.imgur.com/wA1GJTg.png',
     firendReq: [],
     friendsList: [],
     friendData: null,
@@ -99,27 +100,29 @@ export default class HomeScreen extends React.Component {
       .collection('users')
       .doc(uid)
       .get();
-    this.setState({username: userData.data().username});
-    this.setState({firendReq: userData.data().friendRequestsList});
-    this.setState({friendsList: userData.data().friendsList});
-    let friendData = {};
-    for (var item of this.state.friendsList) {
-      let data = await this.getProfileByUserID(item);
-      friendData[item] = data;
-    }
-    this.setState({friendData});
-  };
+    if (userData.exists) {
+      this.setState({username: userData.data().username});
+      this.setState({name: userData.data().name});
+      this.setState({firendReq: userData.data().friendRequestsList});
+      this.setState({friendsList: userData.data().friendsList});
+      this.setState({avatar: userData.data().avatar});
 
-  async componentDidMount() {
-    this.fetchUserData();
-  }
+      let friendData = {};
+      for (var item of this.state.friendsList) {
+        let data = await this.getProfileByUserID(item);
+        friendData[item] = data;
+      }
+      this.setState({friendData});
+    } else {
+      this.fetchUserData();
+    }
+  };
 
   renderFriends = () => {
     if (this.state.friendData === null) {
       return (
         <View
           style={{
-            height: 200,
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
@@ -139,7 +142,7 @@ export default class HomeScreen extends React.Component {
           <View key={key}>
             <ContactCard
               key={key}
-              imageURL="https://i.imgur.com/2D7TdPl.jpg"
+              imageURL={friend.avatar}
               name={friend.username}
               onPress={() => {
                 this.sendUserNotification(friend.username);
@@ -154,6 +157,19 @@ export default class HomeScreen extends React.Component {
     }
   };
   render() {
+    if (this.state.username == '') {
+      return (
+        <View
+          style={{
+            backgroundColor: '#fff',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
     return (
       <ScrollView
         style={styles.container}
@@ -174,7 +190,7 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.needAttention}>give me attention!</Text>
           <Image
             source={{
-              uri: 'https://i.imgur.com/2D7TdPl.jpg',
+              uri: this.state.avatar,
             }}
             style={[styles.dp, styles.dpLarge]}
           />

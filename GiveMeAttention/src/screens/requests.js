@@ -121,6 +121,7 @@ export default class RequestsScreen extends React.Component {
             return (
               <RequestsCard
                 key={key}
+                userAvatar={friend.avatar}
                 username={friend.username}
                 onConfirm={() => this.confirmFriend(fid)}
                 onIgnore={() => this.ignoreFriend(fid)}

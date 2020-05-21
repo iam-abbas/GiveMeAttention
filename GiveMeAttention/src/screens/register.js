@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   TextInput,
+  Image,
   Platform,
   TouchableOpacity,
 } from 'react-native';
@@ -15,6 +16,8 @@ import {check, PERMISSIONS, request} from 'react-native-permissions';
 import {Button} from '../common/Button';
 import {FormTextInput} from '../common/FormTextInput';
 import {COLOURS} from '../config/colors';
+import Ionicons from 'react-native-ionicons';
+import storage from '@react-native-firebase/storage';
 
 export default class RegisterScreen extends React.Component {
   constructor(props) {
@@ -23,6 +26,7 @@ export default class RegisterScreen extends React.Component {
       name: '',
       username: '',
       email: '',
+      avatar: 'https://i.imgur.com/wA1GJTg.png',
       password: '',
       fcm_token: null,
       errorMessage: null,
@@ -48,12 +52,36 @@ export default class RegisterScreen extends React.Component {
       });
   };
 
+  handleUniqueUsername = () => {
+    if (this.state.username.length) {
+      if (this.state.username.length < 5) {
+        return (
+          <Text style={styles.usernameError}>
+            Usernames must be at least 5 characters long
+          </Text>
+        );
+      } else if (this.state.userExists) {
+        return (
+          <Text style={styles.usernameError}>
+            {this.state.username} is already taken.
+          </Text>
+        );
+      } else {
+        return (
+          <Text style={styles.usernameSuccess}>
+            {this.state.username} is available!
+          </Text>
+        );
+      }
+    }
+  };
+
   handlePickAvatar = async () => {
     // Get permission
     check(PERMISSIONS.IOS.PHOTO_LIBRARY)
-      .then(result => {
-        console.log(result);
-        switch (result) {
+      .then(RESULTS => {
+        console.log(RESULTS);
+        switch (RESULTS) {
           case RESULTS.UNAVAILABLE:
             console.log(
               'This feature is not available (on this device / in this context)',
@@ -77,7 +105,7 @@ export default class RegisterScreen extends React.Component {
         }
       })
       .catch(error => {
-        // No errors lol
+        console.log(error);
       });
 
     // Get the image
@@ -97,7 +125,7 @@ export default class RegisterScreen extends React.Component {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         const source = {uri: response.uri};
-        this.avatar = response.uri;
+        this.setState({avatar: response.uri});
       }
     });
   };
@@ -125,9 +153,32 @@ export default class RegisterScreen extends React.Component {
     }
   }
 
-  createUser = (uname, mailid, pname, userid) => {
+  uploadPhoto = async (user_id, uri) => {
+    const path = `users/${user_id}/avatar/profile_pic.jpg`;
+    return new Promise(async (res, rej) => {
+      const response = await fetch(uri);
+      const file = await response.blob();
+      let upload = storage()
+        .ref(path)
+        .put(file);
+      upload.on(
+        'state_changed',
+        snapshot => {},
+        err => {
+          rej(err);
+        },
+        async () => {
+          const url = await upload.snapshot.ref.getDownloadURL();
+          res(url);
+        },
+      );
+    });
+  };
+
+  createUser = async (uname, mailid, pname, avatar, userid) => {
     console.log('Creating User...');
-    firestore()
+    let avt = await this.uploadPhoto(userid, avatar);
+    await firestore()
       .collection('users')
       .doc(userid)
       .set({
@@ -136,13 +187,14 @@ export default class RegisterScreen extends React.Component {
         email: mailid,
         fcmtoken: this.state.fcm_token,
         points: 0,
+        avatar: avt,
         friendsList: [],
         friendRequestsList: [],
       })
       .then(() => {
         console.log('User created');
       });
-    firestore()
+    await firestore()
       .collection('usernames')
       .doc(uname)
       .set({
@@ -156,16 +208,14 @@ export default class RegisterScreen extends React.Component {
   handleSignUp = () => {
     auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(userCredentials => {
+      .then(() => {
         this.createUser(
           this.state.username,
           this.state.email,
           this.state.name,
+          this.state.avatar,
           auth().currentUser.uid,
         );
-        userCredentials.user.updateProfile({
-          displayName: this.state.name,
-        });
         return console.log('Hi');
       })
       .catch(error => this.setState({errorMessage: error.message}));
@@ -183,73 +233,63 @@ export default class RegisterScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.greetingTop}>{`Welcome,`}</Text>
-        <Text style={styles.greeting}>{`Sign up to get started.`}</Text>
-
-        <View style={styles.errorMessage}>
-          {this.state.errorMessage && (
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-          )}
-        </View>
-
         <View style={styles.form}>
-          <View>
-            <Text style={styles.inputTitle}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={name => this.setState({name})}
-              value={this.state.name}
+          <Text style={styles.heading}>Register.</Text>
+          <TouchableOpacity
+            style={styles.avatar}
+            onPress={this.handlePickAvatar}>
+            <Image
+              source={{uri: this.state.avatar}}
+              style={styles.avatarPlaceholder}
             />
-          </View>
-          <View style={{marginTop: 32}}>
-            <Text style={styles.inputTitle}>Username</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={username => {
-                this.setState({username});
-                this.checkUniqueUsername(username);
-              }}
-              value={this.state.username}
+            <Ionicons
+              name="ios-add"
+              size={40}
+              color="#FFF"
+              style={{marginTop: 10}}
             />
-            <Text>This user: {String(this.state.userExists)}</Text>
+          </TouchableOpacity>
+          <FormTextInput
+            value={this.state.name}
+            onChangeText={name => {
+              this.setState({name});
+            }}
+            returnKeyType="done"
+            label={'Full Name'}
+          />
+          <FormTextInput
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+            returnKeyType="done"
+            label={'Email'}
+          />
+          <FormTextInput
+            value={this.state.username}
+            onChangeText={username => {
+              this.setState({username});
+              this.checkUniqueUsername(username);
+            }}
+            returnKeyType="done"
+            label={'Username'}
+          />
+          {this.handleUniqueUsername()}
+          <FormTextInput
+            value={this.state.password}
+            secureTextEntry={true}
+            returnKeyType="done"
+            onChangeText={password => this.setState({password})}
+            label={'Password'}
+          />
+          <View style={styles.actionButton}>
+            <Button label={'Register'} onPress={this.validateForm} />
           </View>
-
-          <View style={{marginTop: 32}}>
-            <Text style={styles.inputTitle}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={email => this.setState({email})}
-              value={this.state.email}
-            />
-          </View>
-
-          <View style={{marginTop: 32}}>
-            <Text style={styles.inputTitle}>Password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              autoCapitalize="none"
-              onChangeText={password => this.setState({password})}
-              value={this.state.password}
-            />
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={this.validateForm}>
-          <Text style={{color: '#FFF', fontWeight: '500'}}>Sign up</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{alignSelf: 'center', marginTop: 32}}>
-          <Text
-            style={{color: '#414959', fontSize: 13}}
+          <TouchableOpacity
             onPress={() => this.props.navigation.navigate('Login')}>
-            Already have an account?{' '}
-            <Text style={{fontWeight: '500', color: '#FEA02F'}}>Login</Text>
-          </Text>
-        </TouchableOpacity>
+            <Text style={styles.gotoLogin}>
+              Already have an account? Click here to login.
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -257,56 +297,52 @@ export default class RegisterScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
-    justifyContent: 'center',
-  },
-  greetingTop: {
-    fontSize: 24,
-    fontWeight: '600',
-    paddingLeft: 30,
-  },
-  greeting: {
-    marginTop: 12,
-    fontSize: 24,
-    color: '#FEA02F',
-    fontWeight: '600',
-    paddingLeft: 30,
-  },
-  errorMessage: {
-    height: 72,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 30,
-  },
-  error: {
-    color: '#E9446A',
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
+    backgroundColor: COLOURS.DODGER_BLUE,
   },
   form: {
-    marginBottom: 48,
-    marginHorizontal: 30,
-  },
-  inputTitle: {
-    color: '#8A8F9E',
-    fontSize: 10,
-    textTransform: 'uppercase',
-  },
-  input: {
-    borderBottomColor: '#8A8F9E',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    height: 40,
-    fontSize: 15,
-    color: '#161F3D',
-  },
-  button: {
-    marginHorizontal: 30,
-    backgroundColor: '#FEA02F',
-    borderRadius: 4,
-    height: 52,
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
+    width: '80%',
+  },
+  heading: {
+    color: COLOURS.WHITE,
+    fontSize: 50,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  actionButton: {
+    marginTop: 40,
+  },
+  avatarPlaceholder: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#E1E2E6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  gotoLogin: {
+    color: COLOURS.DODGER_BLUE_LIGHTER,
+    marginVertical: 20,
+    textAlign: 'center',
+  },
+  usernameError: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#ffb3b3',
+  },
+  usernameSuccess: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#b3ffbe',
   },
 });
