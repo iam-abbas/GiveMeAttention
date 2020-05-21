@@ -37,10 +37,13 @@ export default class LeaderboardScreen extends React.Component {
       let userData = QuerySnapshot;
       this.setState({friendsList: userData.data().friendsList});
       let people = {};
+      people[this.state.uid] = await this.getProfileByUserID(this.state.uid);
+      console.log(people);
       for (var item of this.state.friendsList) {
         let data = await this.getProfileByUserID(item);
         people[item] = data;
       }
+      console.log(Array(people));
       people = Object.keys(people)
         .sort(function(a, b) {
           return people[a].points.toString().localeCompare(people[b].points);
@@ -119,8 +122,8 @@ export default class LeaderboardScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <View style={styles.banner}>
-        <SafeAreaView>
-          <Text style={styles.needAttention}>top attention givers!</Text>
+          <SafeAreaView>
+            <Text style={styles.needAttention}>top attention givers!</Text>
           </SafeAreaView>
           <View style={styles.topThree}>
             {Object.keys(this.state.people)[1] ? (
