@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,12 +37,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We won't be needing this service</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Need the camera</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Need the camera to take a photo and upload</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need the library</string>
+	<string>Need the library to access media</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
