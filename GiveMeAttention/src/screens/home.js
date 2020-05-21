@@ -186,7 +186,7 @@ export default class HomeScreen extends React.Component {
               style={styles.headerButton}
               label="Leaderboard"
               lightButton={true}
-              onPress={() => console.log(3)}
+              onPress={() => this.props.navigation.navigate('Leaderboard')}
             />
           </View>
         </View>
