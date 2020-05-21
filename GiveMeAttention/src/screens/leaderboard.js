@@ -44,6 +44,7 @@ export default class LeaderboardScreen extends React.Component {
       let userData = QuerySnapshot;
       this.setState({friendsList: userData.data().friendsList});
       let people = [];
+      people.push(await this.getProfileByUserID(this.state.uid));
       // people[this.state.uid] = await this.getProfileByUserID(this.state.uid);
       for (var item of this.state.friendsList) {
         // let temp = {};
