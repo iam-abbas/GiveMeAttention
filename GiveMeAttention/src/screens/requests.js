@@ -13,13 +13,21 @@ import {RequestsCard} from '../common/RequestCard';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+function friendSearch(arr, val) {
+  for (var i = 0; i < arr.length; i++)
+    if (Object.keys(arr[i]) == val) return arr[i];
+  return false;
+}
+
 export default class RequestsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       uid: auth().currentUser.uid,
       friendRequestsList: [],
-      friendData: null,
+      friendRequestsData: null,
+      friendsList: [],
+      friendsData: null,
     };
   }
 
@@ -39,27 +47,29 @@ export default class RequestsScreen extends React.Component {
       .then(() => {
         console.log('Removed from friend list');
       });
+    let friendRequestsData = {};
+    friendRequestsData[userid] = 0;
     firestore()
       .collection('users')
       .doc(this.state.uid)
-      .update('friendsList', firestore.FieldValue.arrayUnion(userid))
+      .update(
+        'friendsList',
+        firestore.FieldValue.arrayUnion(friendRequestsData),
+      )
       .then(() => {
         console.log('Added to current user friendlist');
       });
+    let currentData = {};
+    currentData[this.state.uid] = 0;
     firestore()
       .collection('users')
       .doc(userid)
-      .update('friendsList', firestore.FieldValue.arrayUnion(this.state.uid))
+      .update('friendsList', firestore.FieldValue.arrayUnion(currentData))
       .then(() => {
         console.log('Added to users friendlist');
       });
-    let newFL = this.state.friendRequestsList;
-    newFL.splice(newFL.indexOf(userid), 1);
-    this.setState({friendRequestsList: newFL});
-    let friends = this.state.friendData;
-    delete friends[userid];
-    this.setState({friendData: friends});
   };
+
   ignoreFriend = async userid => {
     firestore()
       .collection('users')
@@ -68,79 +78,197 @@ export default class RequestsScreen extends React.Component {
       .then(() => {
         console.log('Removed from friend list');
       });
+
     let newFL = this.state.friendRequestsList;
     newFL.splice(newFL.indexOf(userid), 1);
+    let newFirendsList = this.state.friendsList;
+    newFirendsList.push(userid);
     this.setState({friendRequestsList: newFL});
-    let friends = this.state.friendData;
-    delete friends[userid];
-    this.setState({friendData: friends});
   };
 
-  getFirendsList = async () => {
+  getProfileByUserID = async userid => {
+    const user = await firestore()
+      .collection('users')
+      .doc(userid)
+      .get();
+    return user.data();
+  };
+
+  UnfriendUser = async fid => {
+    let userData = await this.getProfileByUserID(fid);
+    let userItem = friendSearch(userData.friendsList, this.state.uid);
+    console.log(userItem);
+    await firestore()
+      .collection('users')
+      .doc(fid)
+      .update('friendsList', firestore.FieldValue.arrayRemove(userItem))
+      .then(() => {
+        console.log('Removed from user friend list');
+      });
+    let friendData = await this.getProfileByUserID(this.state.uid);
+    let friendItem = friendSearch(friendData.friendsList, fid);
+    await firestore()
+      .collection('users')
+      .doc(this.state.uid)
+      .update('friendsList', firestore.FieldValue.arrayRemove(friendItem))
+      .then(() => {
+        console.log('Removed from friend`s friend list');
+      });
+  };
+
+  BlockUser = fid => {
+    this.UnfriendUser(fid);
+    firestore()
+      .collection('users')
+      .doc(this.state.uid)
+      .update('BlockList', firestore.FieldValue.arrayUnion(fid))
+      .then(() => {
+        console.log('Blocked user');
+      });
+  };
+
+  getFirendsList = async QuerySnapshot => {
+    console.log('Loading data..');
+    if (QuerySnapshot) {
+      const uid = this.state.uid;
+      let userData = QuerySnapshot;
+      this.setState({friendRequestsList: userData.data().friendRequestsList});
+      let friendRequestsData = {};
+      for (var item of this.state.friendRequestsList) {
+        let data = await this.getProfileByUserID(item);
+        friendRequestsData[item] = data;
+      }
+      this.setState({friendRequestsData});
+      let friendsArray = userData.data().friendsList;
+      let friendsList = friendsArray.flatMap(x => Object.keys(x));
+      this.setState({friendsList});
+      let friendsData = {};
+      for (var item of this.state.friendsList) {
+        let data = await this.getProfileByUserID(item);
+        friendsData[item] = data;
+      }
+      this.setState({friendsData});
+    }
+  };
+
+  onError = error => {
+    console.log(error);
+  };
+  async componentDidMount() {
     const uid = this.state.uid;
-    const userData = await firestore()
+    firestore()
       .collection('users')
       .doc(uid)
-      .get();
-    console.log(userData.data().friendRequestsList);
-    this.setState({friendRequestsList: userData.data().friendRequestsList});
-    let friendData = {};
-    for (var item of this.state.friendRequestsList) {
-      let data = await this.getProfileByUserID(item);
-      friendData[item] = data;
-    }
-    this.setState({friendData});
-  };
-
-  async componentDidMount() {
-    this.getFirendsList();
+      .onSnapshot(this.getFirendsList, this.onError);
   }
 
-  render() {
-    if (this.state.friendData === null) {
+  renderFriends = () => {
+    console.log('Getting friends component');
+
+    if (this.state.friendsData === null) {
       return (
         <View
           style={{
-            backgroundColor: '#fff',
+            marginTop: 50,
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color={'#fff'} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.requests}>
+          {this.state.friendsList.length ? (
+            this.state.friendsList.map((fid, key) => {
+              let friend = this.state.friendsData[fid];
+              if (friend) {
+                console.log(friend);
+                return (
+                  <RequestsCard
+                    key={key}
+                    userAvatar={friend.avatar}
+                    username={friend.username}
+                    firstLabel="Unfriend"
+                    secondLabel="Block"
+                    onFirst={() => this.UnfriendUser(fid)}
+                    onSecond={() => this.BlockUser(fid)}
+                  />
+                );
+              }
+            })
+          ) : (
+            <View style={styles.noFriends}>
+              <Text style={styles.noFriendsText}>
+                You do not have any friends.
+              </Text>
+            </View>
+          )}
         </View>
       );
     }
+  };
+
+  renderFriendRequests = () => {
+    console.log('Getting friend requests component');
+    if (this.state.friendRequestsData === null) {
+      return (
+        <View
+          style={{
+            marginTop: 50,
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" color={'#fff'} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.requests}>
+          {this.state.friendRequestsList.length ? (
+            this.state.friendRequestsList.map((fid, key) => {
+              let friendData = this.state.friendRequestsData[fid];
+              if (friendData) {
+                return (
+                  <RequestsCard
+                    key={key}
+                    userAvatar={friendData.avatar}
+                    username={friendData.username}
+                    firstLabel="Confirm"
+                    secondLabel="Ignore"
+                    onFirst={() => this.confirmFriend(fid)}
+                    onSecond={() => this.ignoreFriend(fid)}
+                  />
+                );
+              }
+            })
+          ) : (
+            <View style={styles.noFriends}>
+              <Text style={styles.noFriendsText}>
+                You do not have any pending friend request.
+              </Text>
+            </View>
+          )}
+        </View>
+      );
+    }
+  };
+  render() {
     return (
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <SafeAreaView>
           <View style={styles.banner}>
-            <Text style={styles.bannerHeading}>Friend Requests</Text>
+            <Text style={styles.bannerHeading}>Friends</Text>
           </View>
         </SafeAreaView>
-        <View style={styles.requests}>
-          {this.state.friendRequestsList.length ? (
-            this.state.friendRequestsList.map((fid, key) => {
-              let friend = this.state.friendData[fid];
-              return (
-                <RequestsCard
-                  key={key}
-                  userAvatar={friend.avatar}
-                  username={friend.username}
-                  onConfirm={() => this.confirmFriend(fid)}
-                  onIgnore={() => this.ignoreFriend(fid)}
-                />
-              );
-            })
-          ) : (
-            <View style={styles.noFriends}>
-              <Text style={styles.noFriendsText}>
-                You do not have any friend requests :(
-              </Text>
-            </View>
-          )}
-        </View>
+        <Text style={styles.subTitle}>Friend Requests</Text>
+        {this.renderFriendRequests()}
+        <Text style={styles.subTitle}>Your Friends</Text>
+        {this.renderFriends()}
       </ScrollView>
     );
   }
@@ -178,6 +306,15 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 20,
   },
+  subTitle: {
+    marginTop: 30,
+    textAlign: 'left',
+    alignItems: 'flex-start',
+    padding: 5,
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '900',
+  },
   noFriends: {
     flex: 1,
     justifyContent: 'center',
@@ -185,8 +322,8 @@ const styles = StyleSheet.create({
   },
   noFriendsText: {
     color: '#fff',
-    paddingTop: 40,
+    opacity: 0.7,
     fontWeight: '600',
-    fontSize: 18,
+    fontSize: 16,
   },
 });
