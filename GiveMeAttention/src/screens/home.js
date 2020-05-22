@@ -1,5 +1,4 @@
-import React, {useEffect} from 'react';
-import messaging from '@react-native-firebase/messaging';
+import React from 'react';
 import {
   Text,
   StyleSheet,
@@ -9,14 +8,16 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {Button} from '../common/Button';
-import {FormTextInput} from '../common/FormTextInput';
 import {COLOURS} from '../config/colors';
 import {ContactCard} from '../common/ContactCard';
+import ImagePicker from 'react-native-image-picker';
+import {check, PERMISSIONS, request} from 'react-native-permissions';
+import storage from '@react-native-firebase/storage';
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -28,9 +29,10 @@ export default class HomeScreen extends React.Component {
     friendsList: [],
     friendData: null,
   };
+
   constructor(props) {
     super(props);
-    this.props.navigation.addListener('didFocus', payload => {
+    this.props.navigation.addListener('didFocus', () => {
       this.fetchUserData();
     });
   }
@@ -39,6 +41,93 @@ export default class HomeScreen extends React.Component {
     auth()
       .signOut()
       .then(() => console.log('User signed out!'));
+  };
+
+  uploadPhoto = async (user_id, uri) => {
+    const path = `users/${user_id}/avatar/profile_pic.jpg`;
+    return new Promise(async (res, rej) => {
+      const response = await fetch(uri);
+      const file = await response.blob();
+      let upload = storage()
+        .ref(path)
+        .put(file);
+      upload.on(
+        'state_changed',
+        () => {},
+        err => {
+          rej(err);
+        },
+        async () => {
+          const url = await upload.snapshot.ref.getDownloadURL();
+          res(url);
+        },
+      );
+    });
+  };
+
+  updateAvatar = async req_uri => {
+    let avatar = await this.uploadPhoto(this.state.uid, req_uri);
+    await firestore()
+      .collection('users')
+      .doc(this.state.uid)
+      .update('avatar', avatar)
+      .then(() => {
+        console.log('Updated Avatar');
+      });
+  };
+
+  handlePickAvatar = async () => {
+    // Get permission
+    check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+      .then(RESULTS => {
+        console.log(RESULTS);
+        switch (RESULTS) {
+          case RESULTS.UNAVAILABLE:
+            console.log(
+              'This feature is not available (on this device / in this context)',
+            );
+            break;
+          case RESULTS.DENIED:
+            'The permission has not been requested / is denied but requestable',
+              request(
+                Platform.select({
+                  android: PERMISSIONS.ANDROID.CAMERA,
+                  ios: PERMISSIONS.IOS.PHOTO_LIBRARY,
+                }),
+              );
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            break;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    // Get the image
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        this.setState({avatar: response.uri});
+        this.updateAvatar(response.uri);
+      }
+    });
   };
 
   getProfileByUserID = async userid => {
@@ -89,19 +178,37 @@ export default class HomeScreen extends React.Component {
       .then(() => {
         console.log('Increased points');
       });
+
+    let currentData = await this.getProfileByUserID(this.state.uid);
+    let newFriendsList = currentData.friendsList;
+    for (var item of newFriendsList) {
+      if (Object.keys(item) == f_id) {
+        item[f_id] = Date.now();
+      }
+    }
+    await firestore()
+      .collection('users')
+      .doc(this.state.uid)
+      .update('friendsList', newFriendsList)
+      .then(() => {
+        console.log('Updated FriendsList');
+      });
   };
 
   fetchUserData = async QuerySnapshot => {
     console.log('Loading data..');
     if (QuerySnapshot) {
-      // this.setState({friendData: null});
-      const uid = this.state.uid;
       let userData = QuerySnapshot;
       if (userData.exists) {
         this.setState({username: userData.data().username});
         this.setState({name: userData.data().name});
         this.setState({firendReq: userData.data().friendRequestsList});
-        this.setState({friendsList: userData.data().friendsList});
+        let friendsArray = userData.data().friendsList;
+        friendsArray.sort(function(a, b) {
+          return Object.values(b) - Object.values(a);
+        });
+        let friendsList = friendsArray.flatMap(x => Object.keys(x));
+        this.setState({friendsList});
         this.setState({avatar: userData.data().avatar});
 
         let friendData = {};
@@ -184,32 +291,32 @@ export default class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <View style={styles.banner}>
-        <SafeAreaView>
-          <View style={styles.topBar}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('FriendRequests')}
-              style={styles.topButton}>
-              <Text style={styles.topButtonText}>Friend Requests</Text>
-              {
-                this.state.firendReq.length ?
-                <View style={styles.newIndicator} /> :
-                null
-              }
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={this.signOutUser}
-              style={styles.topButton}>
-              <Text style={styles.topButtonText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
+          <SafeAreaView>
+            <View style={styles.topBar}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('FriendRequests')}
+                style={styles.topButton}>
+                <Text style={styles.topButtonText}>Friends</Text>
+                {this.state.firendReq.length ? (
+                  <View style={styles.newIndicator} />
+                ) : null}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this.signOutUser}
+                style={styles.topButton}>
+                <Text style={styles.topButtonText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
           </SafeAreaView>
           <Text style={styles.needAttention}>Give Me Attention</Text>
-          <Image
-            source={{
-              uri: this.state.avatar,
-            }}
-            style={[styles.dp, styles.dpLarge]}
-          />
+          <TouchableOpacity onPress={this.handlePickAvatar}>
+            <Image
+              source={{
+                uri: this.state.avatar,
+              }}
+              style={[styles.dp, styles.dpLarge]}
+            />
+          </TouchableOpacity>
           <Text style={styles.username}>{this.state.name}</Text>
           <Text>{this.state.username}</Text>
         </View>
@@ -312,6 +419,6 @@ const styles = StyleSheet.create({
     width: 10,
     margin: 5,
     borderRadius: 12,
-    backgroundColor: COLOURS.ROYAL_RED
-  }
+    backgroundColor: COLOURS.ROYAL_RED,
+  },
 });
