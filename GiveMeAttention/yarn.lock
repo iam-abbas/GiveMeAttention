@@ -5216,11 +5216,6 @@ react-native-iphone-x-helper@^1.2.1:
   dependencies:
     prop-types "^15.5.9"
 
-react-native-permission@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-permission/-/react-native-permission-0.0.1.tgz#8e573a1e937f56b776b6b7ad5b207b9c2f120652"
-  integrity sha1-jlc6HpN/Vrd2tretWyB7nC8SBlI=
-
 react-native-permissions@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.1.4.tgz#b0663839d28444d8ea6b5302303b2151ea70d2da"
