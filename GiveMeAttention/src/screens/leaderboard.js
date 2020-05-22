@@ -42,7 +42,12 @@ export default class LeaderboardScreen extends React.Component {
     console.log('Getting friends');
     if (QuerySnapshot) {
       let userData = QuerySnapshot;
-      this.setState({friendsList: userData.data().friendsList});
+      let friendsArray = userData.data().friendsList;
+      friendsArray.sort(function(a, b) {
+        return Object.values(b) - Object.values(a);
+      });
+      let friendsList = friendsArray.flatMap(x => Object.keys(x));
+      this.setState({friendsList});
       let people = [];
       people.push(await this.getProfileByUserID(this.state.uid));
       // people[this.state.uid] = await this.getProfileByUserID(this.state.uid);
