@@ -23,18 +23,19 @@ export class RequestsCard extends React.Component {
     return (
       <View style={[styles.container]}>
         <View style={styles.leftSide}>
-          <Image
-            source={{uri: this.props.userAvatar}}
-            style={styles.image}
-          />
+          <Image source={{uri: this.props.userAvatar}} style={styles.image} />
           <Text style={[styles.name, styles.text]}>{this.props.username}</Text>
         </View>
         <View style={styles.rightSide}>
-          <TouchableOpacity style={styles.btn} onPress={this.props.onConfirm}>
-            <Text style={styles.btnText}>Confirm</Text>
+          <TouchableOpacity style={styles.btn} onPress={this.props.onFirst}>
+            <Text style={[styles.btnText, styles.goodBtn]}>
+              {this.props.firstLabel}
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={this.props.onIgnore}>
-            <Text style={styles.btnText}>Ignore</Text>
+          <TouchableOpacity style={styles.btn} onPress={this.props.onSecond}>
+            <Text style={[styles.btnText, styles.badBtn]}>
+              {this.props.secondLabel}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -82,5 +83,11 @@ const styles = StyleSheet.create({
   },
   btnText: {
     lineHeight: 48,
+  },
+  goodBtn: {
+    color: '#1f1f1f',
+  },
+  badBtn: {
+    color: 'red',
   },
 });
