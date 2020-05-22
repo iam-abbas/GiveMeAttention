@@ -16,7 +16,7 @@ import {check, PERMISSIONS, request} from 'react-native-permissions';
 import {Button} from '../common/Button';
 import {FormTextInput} from '../common/FormTextInput';
 import {COLOURS} from '../config/colors';
-import Ionicons from 'react-native-ionicons';
+//import Ionicons from 'react-native-ionicons';
 import storage from '@react-native-firebase/storage';
 
 export default class RegisterScreen extends React.Component {
@@ -242,12 +242,7 @@ export default class RegisterScreen extends React.Component {
               source={{uri: this.state.avatar}}
               style={styles.avatarPlaceholder}
             />
-            <Ionicons
-              name="ios-add"
-              size={40}
-              color="#FFF"
-              style={{marginTop: 10}}
-            />
+
           </TouchableOpacity>
           <FormTextInput
             value={this.state.name}
