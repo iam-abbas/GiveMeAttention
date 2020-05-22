@@ -1,5 +1,12 @@
 import * as React from 'react';
-import {View, ScrollView, StyleSheet, Dimensions, Text, SafeAreaView} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  Text,
+  SafeAreaView,
+} from 'react-native';
 import {COLOURS} from '../config/colors';
 import {FormTextInput} from '../common/FormTextInput';
 import {Button} from '../common/Button';
@@ -12,6 +19,7 @@ export default class AddFriendScreen extends React.Component {
     super(props);
 
     this.state = {
+      userid: auth().currentUser.uid,
       friendUsername: '',
       message: '',
     };
@@ -29,18 +37,37 @@ export default class AddFriendScreen extends React.Component {
         .collection('users')
         .doc(uid)
         .get();
-      if (friends_profile.data().friendsList.includes(auth().currentUser.uid)) {
+      let friendsArray = friends_profile.data().friendsList;
+      let blocklist = friends_profile.data().BlockList;
+      let friendsList = friendsArray.flatMap(x => Object.keys(x));
+      if (uid == this.state.userid) {
+        return this.setState({message: 'You cannot add yourself.'});
+      }
+      if (friendsList.includes(auth().currentUser.uid)) {
         return this.setState({message: 'This user is already your friend'});
+      }
+      if (blocklist.includes(auth().currentUser.uid)) {
+        return this.setState({
+          message:
+            'You have been blocked by this user! Only They can send you friend request!',
+        });
       }
       firestore()
         .collection('users')
         .doc(uid)
-        .update(
-          'friendRequestsList',
-          firestore.FieldValue.arrayUnion(auth().currentUser.uid),
-        )
+        .update({
+          friendRequestsList: firestore.FieldValue.arrayUnion(
+            auth().currentUser.uid,
+          ),
+        })
         .then(() => {
-          this.setState({message: 'Succesffuly sent friend request'});
+          this.setState({message: 'Friend request successfully sent '});
+        });
+      firestore()
+        .collection('users')
+        .doc(auth().currentUser.uid)
+        .update({
+          BlockList: firestore.FieldValue.arrayRemove(uid),
         });
     } else {
       this.setState({message: 'Username does not exists.'});
@@ -53,9 +80,9 @@ export default class AddFriendScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <SafeAreaView>
-        <View style={styles.banner}>
-          <Text style={styles.bannerHeading}>Add Friend</Text>
-        </View>
+          <View style={styles.banner}>
+            <Text style={styles.bannerHeading}>Add Friend</Text>
+          </View>
         </SafeAreaView>
         <View style={styles.form}>
           <Text>{this.state.message}</Text>
