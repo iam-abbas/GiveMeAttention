@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -138,12 +139,66 @@ export default class HomeScreen extends React.Component {
     return user.data();
   };
 
+  checkNotification = (notif_map, k) => {
+    if (!notif_map[k]) {
+      notif_map[k] = [Math.round(Date.now() / 60000)];
+      return true;
+    }
+    if (Date.now() / 60000 - notif_map[k][0] > 30 && notif_map[k].length >= 10) {
+      notif_map[k].push(Math.round(Date.now() / 60000));
+      notif_map[k].shift();
+      return true;
+    } else if (notif_map[k].length < 10) {
+      notif_map[k].push(Math.round(Date.now() / 60000));
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  notificationExceed = () =>
+    Alert.alert(
+      'Notification Limit Exceeded',
+      'You can only send 10 notifications every 30 minutes to each user!',
+      [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+      {cancelable: false},
+    );
+
   sendUserNotification = async username => {
     const user_prof = await firestore()
       .collection('usernames')
       .doc(username)
       .get();
     var f_id = user_prof.data().uid;
+    let currentData = await this.getProfileByUserID(this.state.uid);
+
+    if (currentData.notificationsData) {
+      var notificationsData = currentData.notificationsData;
+    } else {
+      var notificationsData = {};
+    }
+    if (!this.checkNotification(notificationsData, f_id)) {
+      this.notificationExceed();
+      return console.log('Exceeded Notifications');
+    }
+
+    let newFriendsList = currentData.friendsList;
+    for (var item of newFriendsList) {
+      if (Object.keys(item) == f_id) {
+        item[f_id] = Date.now();
+      }
+    }
+    await firestore()
+      .collection('users')
+      .doc(this.state.uid)
+      .update({
+        friendsList: newFriendsList,
+        notificationsData: notificationsData,
+      })
+      .then(() => {
+        console.log('Updated FriendsList');
+      });
+
     const user_data = await this.getProfileByUserID(f_id);
     var fcm_token = user_data.fcmtoken;
     const FIREBASE_API_KEY =
@@ -178,25 +233,9 @@ export default class HomeScreen extends React.Component {
       .then(() => {
         console.log('Increased points');
       });
-
-    let currentData = await this.getProfileByUserID(this.state.uid);
-    let newFriendsList = currentData.friendsList;
-    for (var item of newFriendsList) {
-      if (Object.keys(item) == f_id) {
-        item[f_id] = Date.now();
-      }
-    }
-    await firestore()
-      .collection('users')
-      .doc(this.state.uid)
-      .update('friendsList', newFriendsList)
-      .then(() => {
-        console.log('Updated FriendsList');
-      });
   };
 
   fetchUserData = async QuerySnapshot => {
-    console.log('Loading data..');
     if (QuerySnapshot) {
       let userData = QuerySnapshot;
       if (userData.exists) {
@@ -407,6 +446,14 @@ const styles = StyleSheet.create({
     width: '40%',
     marginHorizontal: 10,
     marginTop: 20,
+  },
+  msg: {
+    textAlign: 'left',
+    alignItems: 'flex-start',
+    padding: 10,
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '900',
   },
   contacts: {
     flexDirection: 'row',
