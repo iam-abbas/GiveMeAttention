@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   Alert,
+  Vibration,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -168,6 +169,7 @@ export default class HomeScreen extends React.Component {
     );
 
   sendUserNotification = async username => {
+    Vibration.vibrate(50);
     const user_prof = await firestore()
       .collection('usernames')
       .doc(username)
@@ -456,7 +458,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     opacity: 0.5,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     fontWeight: '900',
   },
   contacts: {
