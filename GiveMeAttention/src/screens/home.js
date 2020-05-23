@@ -144,7 +144,10 @@ export default class HomeScreen extends React.Component {
       notif_map[k] = [Math.round(Date.now() / 60000)];
       return true;
     }
-    if (Date.now() / 60000 - notif_map[k][0] > 30 && notif_map[k].length >= 10) {
+    if (
+      Date.now() / 60000 - notif_map[k][0] > 30 &&
+      notif_map[k].length >= 10
+    ) {
       notif_map[k].push(Math.round(Date.now() / 60000));
       notif_map[k].shift();
       return true;
@@ -376,6 +379,7 @@ export default class HomeScreen extends React.Component {
             />
           </View>
         </View>
+        <Text style={styles.msg}>Tap on user to send notification</Text>
         <View style={styles.contacts}>{this.renderFriends()}</View>
       </ScrollView>
     );
@@ -448,11 +452,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   msg: {
-    textAlign: 'left',
-    alignItems: 'flex-start',
-    padding: 10,
+    marginTop: 30,
     color: '#fff',
-    fontSize: 18,
+    fontSize: 12,
+    opacity: 0.5,
+    textTransform: "uppercase",
     fontWeight: '900',
   },
   contacts: {

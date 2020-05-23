@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width * 0.4,
     alignItems: "center",
-    marginVertical: 15,
+    marginTop: 5,
+    marginBottom: 15,
     marginHorizontal: 0
   },
   image: {
