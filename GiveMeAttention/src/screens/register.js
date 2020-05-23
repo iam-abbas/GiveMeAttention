@@ -46,7 +46,8 @@ export default class RegisterScreen extends React.Component {
     }
   };
 
-  checkUniqueUsername = uname => {
+  checkUniqueUsername = () => {
+    var uname = this.state.username;
     firestore()
       .collection('usernames')
       .doc(uname)
@@ -58,10 +59,10 @@ export default class RegisterScreen extends React.Component {
 
   handleUniqueUsername = () => {
     if (this.state.username.length) {
-      if (this.state.username.length < 5) {
+      if (this.state.username.length < 3) {
         return (
           <Text style={styles.usernameError}>
-            Usernames must be at least 5 characters long
+            Usernames must be at least 3 characters long
           </Text>
         );
       } else if (this.state.userExists) {
@@ -208,6 +209,11 @@ export default class RegisterScreen extends React.Component {
         console.log('Usename registered!');
       });
   };
+
+  changeUsernameToLowercase = (input) => {
+  var temp = input.toLowerCase()
+  this.setState({username: temp})
+}
 
   handleSignUp = () => {
     auth()
@@ -584,8 +590,8 @@ export default class RegisterScreen extends React.Component {
           <FormTextInput
             value={this.state.username}
             onChangeText={username => {
-              this.setState({username});
-              this.checkUniqueUsername(username);
+              this.changeUsernameToLowercase(username);
+              this.checkUniqueUsername();
             }}
             returnKeyType="done"
             label={'Username'}
