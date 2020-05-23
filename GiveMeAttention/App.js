@@ -22,7 +22,7 @@ const AppTabNavigator = createStackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      headerShown: true,
+      headerShown: false,
       headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
@@ -53,14 +53,14 @@ const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      headerShown: true,
+      headerShown: false,
       headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
-      headerShown: true,
+      headerShown: false,
       headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
