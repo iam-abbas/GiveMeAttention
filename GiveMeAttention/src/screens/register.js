@@ -141,11 +141,11 @@ export default class RegisterScreen extends React.Component {
         errorMessage: 'Please complete all the fields.',
       });
     } else if (!this.state.userExists) {
-      if (this.state.username.length >= 5) {
+      if (this.state.username.length >= 3) {
         this.handleSignUp();
       } else {
         this.setState({
-          errorMessage: 'Username too short. (min lenght: 5)',
+          errorMessage: 'Username too short. (min length: 3)',
         });
       }
     } else {

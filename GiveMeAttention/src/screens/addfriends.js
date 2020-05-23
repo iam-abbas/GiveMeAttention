@@ -46,10 +46,10 @@ export default class AddFriendScreen extends React.Component {
       if (friendsList.includes(auth().currentUser.uid)) {
         return this.setState({message: 'This user is already your friend'});
       }
-      if (blocklist.includes(auth().currentUser.uid)) {
+      if (blocklist && blocklist.includes(auth().currentUser.uid)) {
         return this.setState({
           message:
-            'You have been blocked by this user! Only They can send you friend request!',
+            'You have been blocked by this user! Only they can send you friend request!',
         });
       }
       firestore()
@@ -61,7 +61,7 @@ export default class AddFriendScreen extends React.Component {
           ),
         })
         .then(() => {
-          this.setState({message: 'Friend request successfully sent '});
+          this.setState({message: 'Friend request sent'});
         });
       firestore()
         .collection('users')

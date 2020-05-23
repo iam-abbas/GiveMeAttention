@@ -50,15 +50,15 @@ const AppTabNavigator = createStackNavigator({
 });
 
 const AuthStack = createStackNavigator({
-  Login: {
-    screen: LoginScreen,
+    Register: {
+    screen: RegisterScreen,
     navigationOptions: {
       headerShown: false,
       headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
-  Register: {
-    screen: RegisterScreen,
+  Login: {
+    screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
       headerTintColor: COLOURS.DODGER_BLUE,

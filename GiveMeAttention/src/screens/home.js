@@ -162,7 +162,7 @@ export default class HomeScreen extends React.Component {
 
   notificationExceed = () =>
     Alert.alert(
-      'Notification Limit Exceeded',
+      'Limit Exceeded',
       'You can only send 10 notifications every 30 minutes to each user!',
       [{text: 'OK', onPress: () => console.log('OK Pressed')}],
       {cancelable: false},
