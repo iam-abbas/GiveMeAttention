@@ -5,7 +5,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import LoadingScreen from './src/screens/loading';
 import LoginScreen from './src/screens/login';
 import RegisterScreen from './src/screens/register';
-
+import {COLOURS} from './src/config/colors';
 import HomeScreen from './src/screens/home';
 import AddFriendScreen from './src/screens/addfriends';
 import RequestsScreen from './src/screens/requests';
@@ -22,29 +22,29 @@ const AppTabNavigator = createStackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      headerShown: false,
-      headerTintColor: '#fff',
+      headerShown: true,
+      headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
   AddFriend: {
     screen: AddFriendScreen,
     navigationOptions: {
-      headerShown: false,
-      headerTintColor: '#fff',
+      headerShown: true,
+      headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
-  FriendRequests: {
+  Friends: {
     screen: RequestsScreen,
     navigationOptions: {
-      headerShown: false,
-      headerTintColor: '#fff',
+      headerShown: true,
+      headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
   Leaderboard: {
     screen: LeaderboardScreen,
     navigationOptions: {
-      headerShown: false,
-      headerTintColor: '#fff',
+      headerShown: true,
+      headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
 });
@@ -53,15 +53,15 @@ const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      headerShown: false,
-      headerTintColor: '#fff',
+      headerShown: true,
+      headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
-      headerShown: false,
-      headerTintColor: '#fff',
+      headerShown: true,
+      headerTintColor: COLOURS.DODGER_BLUE,
     },
   },
 });

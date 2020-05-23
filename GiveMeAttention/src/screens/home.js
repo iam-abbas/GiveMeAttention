@@ -336,7 +336,7 @@ export default class HomeScreen extends React.Component {
           <SafeAreaView>
             <View style={styles.topBar}>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('FriendRequests')}
+                onPress={() => this.props.navigation.navigate('Friends')}
                 style={styles.topButton}>
                 <Text style={styles.topButtonText}>Friends</Text>
                 {this.state.firendReq.length ? (
