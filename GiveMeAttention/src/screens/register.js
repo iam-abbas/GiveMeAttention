@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Modal,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -562,7 +563,7 @@ export default class RegisterScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.form}>
+        <ScrollView style={styles.form} contentContainerStyle={styles.formContainter}>
           <Text style={styles.heading}>Register.</Text>
           <TouchableOpacity
             style={styles.avatar}
@@ -613,7 +614,7 @@ export default class RegisterScreen extends React.Component {
               Already have an account? Click here to login.
             </Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
         <View
           style={{
             flexDirection: 'row',
@@ -621,8 +622,9 @@ export default class RegisterScreen extends React.Component {
             alignItems: 'center',
             justifyContent: 'center',
             flexWrap: 'wrap',
-            marginBottom: 15,
-            marginHorizontal: 5,
+            paddingVertical: 15,
+            paddingHorizontal: 5,
+            backgroundColor: COLOURS.DODGER_BLUE,
           }}>
           <Text style={styles.TOS}>
             By tapping Register, you acknowledge that you have read the{' '}
@@ -652,8 +654,12 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 1,
+    width: '100%',
+    paddingHorizontal: Dimensions.get('window').width * 0.1,
+    paddingTop: Dimensions.get('window').height * 0.1
+  },
+  formContainer: {
     justifyContent: 'center',
-    width: '80%',
   },
   heading: {
     color: COLOURS.WHITE,
