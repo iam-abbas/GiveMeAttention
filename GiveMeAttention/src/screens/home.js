@@ -276,7 +276,6 @@ export default class HomeScreen extends React.Component {
       .collection('users')
       .doc(uid)
       .onSnapshot(this.fetchUserData, this.onError);
-    this.fetchUserData();
   }
 
   renderFriends = () => {

@@ -34,8 +34,8 @@ export default class RegisterScreen extends React.Component {
       fcm_token: null,
       errorMessage: null,
       userExists: false,
-    showTerms: false,
-    showPrivacy: false,
+      showTerms: false,
+      showPrivacy: false,
     };
     this.validateForm = this.validateForm.bind(this);
   }
@@ -211,10 +211,10 @@ export default class RegisterScreen extends React.Component {
       });
   };
 
-  changeUsernameToLowercase = (input) => {
-  var temp = input.toLowerCase()
-  this.setState({username: temp})
-}
+  changeUsernameToLowercase = input => {
+    var temp = input.toLowerCase();
+    this.setState({username: temp});
+  };
 
   handleSignUp = () => {
     auth()
@@ -240,7 +240,6 @@ export default class RegisterScreen extends React.Component {
       });
     this.requestUserPermission();
   }
-
 
   renderTermsServices = () => {
     return (
@@ -562,84 +561,91 @@ export default class RegisterScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <ScrollView style={styles.form} contentContainerStyle={styles.formContainter}>
-          <Text style={styles.heading}>Register.</Text>
-          <TouchableOpacity
-            style={styles.avatar}
-            onPress={this.handlePickAvatar}>
-            <Image
-              source={{uri: this.state.avatar}}
-              style={styles.avatarPlaceholder}
-            />
-
-          </TouchableOpacity>
-          <FormTextInput
-            value={this.state.name}
-            onChangeText={name => {
-              this.setState({name});
-            }}
-            returnKeyType="done"
-            label={'Full Name'}
-          />
-          <FormTextInput
-            value={this.state.email}
-            onChangeText={email => this.setState({email})}
-            returnKeyType="done"
-            label={'Email'}
-          />
-          <FormTextInput
-            value={this.state.username}
-            onChangeText={username => {
-              this.changeUsernameToLowercase(username);
-              this.checkUniqueUsername();
-            }}
-            returnKeyType="done"
-            label={'Username'}
-          />
-          {this.handleUniqueUsername()}
-          <FormTextInput
-            value={this.state.password}
-            secureTextEntry={true}
-            returnKeyType="done"
-            onChangeText={password => this.setState({password})}
-            label={'Password'}
-          />
-          <View style={styles.actionButton}>
-            <Button label={'Register'} onPress={this.validateForm} />
-          </View>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Login')}>
-            <Text style={styles.gotoLogin}>
-              Already have an account? Click here to login.
+      <ScrollView>
+        <View style={styles.container}>
+          <ScrollView
+            style={styles.form}
+            contentContainerStyle={styles.formContainter}>
+            <Text style={styles.heading}>Register.</Text>
+            <TouchableOpacity
+              style={styles.avatar}
+              onPress={this.handlePickAvatar}>
+              <Image
+                source={{uri: this.state.avatar}}
+                style={styles.avatarPlaceholder}
+              />
+            </TouchableOpacity>
+            <Text style={{marginTop: 10, color: '#ff8787'}}>
+              {this.state.errorMessage}
             </Text>
-          </TouchableOpacity>
-        </ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-            textAlign: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            paddingVertical: 15,
-            paddingHorizontal: 5,
-            backgroundColor: COLOURS.DODGER_BLUE,
-          }}>
-          <Text style={styles.TOS}>
-            By tapping Register, you acknowledge that you have read the{' '}
-          </Text>
-          <TouchableOpacity onPress={() => this.setState({showPrivacy: true})}>
-            <Text style={[styles.TOS, styles.link]}>Privacy Policy</Text>
-          </TouchableOpacity>
-          <Text style={styles.TOS}> and agree to the </Text>
-          <TouchableOpacity onPress={() => this.setState({showTerms: true})}>
-            <Text style={[styles.TOS, styles.link]}>Terms of Services.</Text>
-          </TouchableOpacity>
+            <FormTextInput
+              value={this.state.name}
+              onChangeText={name => {
+                this.setState({name});
+              }}
+              returnKeyType="done"
+              label={'Full Name'}
+            />
+            <FormTextInput
+              value={this.state.email}
+              onChangeText={email => this.setState({email})}
+              returnKeyType="done"
+              label={'Email'}
+            />
+            <FormTextInput
+              value={this.state.username}
+              onChangeText={username => {
+                this.changeUsernameToLowercase(username);
+                this.checkUniqueUsername();
+              }}
+              returnKeyType="done"
+              label={'Username'}
+            />
+            {this.handleUniqueUsername()}
+            <FormTextInput
+              value={this.state.password}
+              secureTextEntry={true}
+              returnKeyType="done"
+              onChangeText={password => this.setState({password})}
+              label={'Password'}
+            />
+            <View style={styles.actionButton}>
+              <Button label={'Register'} onPress={this.validateForm} />
+            </View>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Login')}>
+              <Text style={styles.gotoLogin}>
+                Already have an account? Click here to login.
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+          <View
+            style={{
+              flexDirection: 'row',
+              textAlign: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              paddingVertical: 15,
+              paddingHorizontal: 5,
+              backgroundColor: COLOURS.DODGER_BLUE,
+            }}>
+            <Text style={styles.TOS}>
+              By tapping Register, you acknowledge that you have read the{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={() => this.setState({showPrivacy: true})}>
+              <Text style={[styles.TOS, styles.link]}>Privacy Policy</Text>
+            </TouchableOpacity>
+            <Text style={styles.TOS}> and agree to the </Text>
+            <TouchableOpacity onPress={() => this.setState({showTerms: true})}>
+              <Text style={[styles.TOS, styles.link]}>Terms of Services.</Text>
+            </TouchableOpacity>
+          </View>
+          {this.renderTermsServices()}
+          {this.renderPrivacy()}
         </View>
-        {this.renderTermsServices()}
-        {this.renderPrivacy()}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -656,7 +662,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: Dimensions.get('window').width * 0.1,
-    paddingTop: Dimensions.get('window').height * 0.1
+    paddingTop: Dimensions.get('window').height * 0.1,
   },
   formContainer: {
     justifyContent: 'center',
@@ -698,7 +704,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#b3ffbe',
   },
-    TOS: {
+  TOS: {
     color: '#fff',
     opacity: 0.6,
     fontSize: 12,

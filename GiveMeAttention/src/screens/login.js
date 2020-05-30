@@ -27,7 +27,9 @@ export default class LoginScreen extends React.Component {
 
   handleLogin = async () => {
     const {email, password} = this.state;
-
+    if (email == '' || password == '') {
+      return this.setState({errorMessage: 'Please enter the login details.'});
+    }
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(async () => {
@@ -388,6 +390,9 @@ export default class LoginScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.form}>
           <Text style={styles.heading}>Login.</Text>
+          <Text style={{marginTop: 10, color: '#ff8787'}}>
+            {this.state.errorMessage}
+          </Text>
           <FormTextInput
             value={this.state.email}
             onChangeText={email => this.setState({email})}
