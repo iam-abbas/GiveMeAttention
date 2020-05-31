@@ -561,7 +561,8 @@ export default class RegisterScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView>
+      <ScrollView 
+         contentContainerStyle={{ flex: 1 }}>
         <View style={styles.container}>
           <ScrollView
             style={styles.form}
