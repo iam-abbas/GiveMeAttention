@@ -561,8 +561,9 @@ export default class RegisterScreen extends React.Component {
 
   render() {
     return (
+    <View style={{backgroundColor: COLOURS.DODGER_BLUE, flex: 1}}>
       <ScrollView 
-         contentContainerStyle={{ flex: 1 }}>
+         >
         <View style={styles.container}>
           <ScrollView
             style={styles.form}
@@ -647,6 +648,7 @@ export default class RegisterScreen extends React.Component {
           {this.renderPrivacy()}
         </View>
       </ScrollView>
+      </View>
     );
   }
 }
