@@ -35,9 +35,6 @@ export default class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.props.navigation.addListener('didFocus', () => {
-      this.fetchUserData();
-    });
   }
 
   signOutUser = () => {
@@ -83,7 +80,7 @@ export default class HomeScreen extends React.Component {
     // Get permission
     check(PERMISSIONS.IOS.PHOTO_LIBRARY)
       .then(RESULTS => {
-        console.log(RESULTS);
+        
         switch (RESULTS) {
           case RESULTS.UNAVAILABLE:
             console.log(
@@ -279,7 +276,6 @@ export default class HomeScreen extends React.Component {
         let friendData = {};
         for (var item of this.state.friendsList) {
           let data = await this.getProfileByUserID(item);
-          console.log(data)
           friendData[item] = data;
         }
         this.setState({friendData});

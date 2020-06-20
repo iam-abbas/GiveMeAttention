@@ -119,7 +119,6 @@ export default class AddFriendScreen extends React.Component {
       body: JSON.stringify(message),
     });
     response = await response.json();
-    console.log(response);
   }
 
   render() {

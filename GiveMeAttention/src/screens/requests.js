@@ -97,7 +97,6 @@ export default class RequestsScreen extends React.Component {
   UnfriendUser = async fid => {
     let userData = await this.getProfileByUserID(fid);
     let userItem = friendSearch(userData.friendsList, this.state.uid);
-    console.log(userItem);
     await firestore()
       .collection('users')
       .doc(fid)
