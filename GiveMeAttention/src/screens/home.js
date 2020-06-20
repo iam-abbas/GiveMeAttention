@@ -251,20 +251,7 @@ export default class HomeScreen extends React.Component {
         this.setState({username: userData.data().username});
         this.setState({name: userData.data().name});
         this.setState({firendReq: userData.data().friendRequestsList});
-        let friendsArray = userData.data().friendsList;
-        friendsArray.sort(function(a, b) {
-          return Object.values(b) - Object.values(a);
-        });
-        let friendsList = friendsArray.flatMap(x => Object.keys(x));
-        this.setState({friendsList});
-        this.setState({avatar: userData.data().avatar});
-
-        let friendData = {};
-        for (var item of this.state.friendsList) {
-          let data = await this.getProfileByUserID(item);
-          friendData[item] = data;
-        }
-        this.setState({friendData});
+        
       } else {
         this.fetchUserData();
       }
@@ -276,6 +263,27 @@ export default class HomeScreen extends React.Component {
   };
   async componentDidMount() {
     const uid = this.state.uid;
+    firestore()
+      .collection('users')
+      .doc(uid)
+      .get()
+      .then(async (userData) => {
+                let friendsArray = userData.data().friendsList;
+        friendsArray.sort(function(a, b) {
+          return Object.values(b) - Object.values(a);
+        });
+        let friendsList = friendsArray.flatMap(x => Object.keys(x));
+        this.setState({friendsList});
+        this.setState({avatar: userData.data().avatar});
+
+        let friendData = {};
+        for (var item of this.state.friendsList) {
+          let data = await this.getProfileByUserID(item);
+          console.log(data)
+          friendData[item] = data;
+        }
+        this.setState({friendData});
+      });
     firestore()
       .collection('users')
       .doc(uid)
