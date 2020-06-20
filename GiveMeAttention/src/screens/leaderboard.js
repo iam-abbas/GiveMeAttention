@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
+
 import {Button} from '../common/Button';
 import {FormTextInput} from '../common/FormTextInput';
 import {COLOURS} from '../config/colors';
@@ -144,7 +146,7 @@ export default class LeaderboardScreen extends React.Component {
           </SafeAreaView>
           <View style={styles.topThree}>
             {Object.keys(this.state.people)[1] ? (
-              <Image
+              <FastImage
                 source={{
                   uri: this.state.people[1]['avatar'],
                 }}
@@ -152,7 +154,7 @@ export default class LeaderboardScreen extends React.Component {
               />
             ) : null}
             {Object.keys(this.state.people)[0] ? (
-              <Image
+              <FastImage
                 source={{
                   uri: this.state.people[0]['avatar'],
                 }}
@@ -160,7 +162,7 @@ export default class LeaderboardScreen extends React.Component {
               />
             ) : null}
             {Object.keys(this.state.people)[2] ? (
-              <Image
+              <FastImage
                 source={{
                   uri: this.state.people[2]['avatar'],
                 }}

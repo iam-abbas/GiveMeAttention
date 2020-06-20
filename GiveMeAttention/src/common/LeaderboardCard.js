@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { COLOURS } from "../config/colors";
+import FastImage from 'react-native-fast-image';
+
 
 export class LeaderboardCard extends React.Component {
   constructor(props) {
@@ -18,7 +20,7 @@ export class LeaderboardCard extends React.Component {
         positionStyles
       ]}>
         <View style={styles.leftSide}>
-          <Image source={{uri: this.props.profilePicture}} style={styles.image} />
+          <FastImage source={{uri: this.props.profilePicture}} style={styles.image} />
           <Text style={[styles.name, styles.text, positionStyles]}>{this.props.username}</Text>
         </View>
         <Text style={[styles.score, styles.text, positionStyles]}>{this.props.score}</Text>

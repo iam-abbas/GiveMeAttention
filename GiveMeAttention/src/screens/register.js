@@ -47,6 +47,10 @@ export default class RegisterScreen extends React.Component {
     }
   };
 
+  checkUsernameValidity = (str) => {
+    var re = /^[a-z]+[0-9]*$/;
+    return re.test(str);
+  }
   checkUniqueUsername = () => {
     var uname = this.state.username;
     firestore()
@@ -66,13 +70,22 @@ export default class RegisterScreen extends React.Component {
             Usernames must be at least 3 characters long
           </Text>
         );
-      } else if (this.state.userExists) {
+      }
+      else if (this.state.userExists) {
         return (
           <Text style={styles.usernameError}>
             {this.state.username} is already taken.
           </Text>
         );
       } else {
+        if(!this.checkUsernameValidity(this.state.username)){
+        return (
+            <Text style={styles.usernameError}>
+            Invalid username. Usernames only consists of characters and numbers.
+            </Text>
+          );
+        }
+
         return (
           <Text style={styles.usernameSuccess}>
             {this.state.username} is available!
@@ -121,6 +134,9 @@ export default class RegisterScreen extends React.Component {
         skipBackup: true,
         path: 'images',
       },
+      maxWidth: 250,
+      maxHeight: 250,
+      quality: 1.0
     };
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
@@ -138,6 +154,10 @@ export default class RegisterScreen extends React.Component {
 
   async validateForm() {
     console.log('Validation');
+    if(!this.checkUsernameValidity(this.state.username)){
+      this.setState({errorMessage: 'Invalid username'});
+      return 0;
+    }
     if (
       this.state.name.length < 1 ||
       this.state.email.length < 1 ||
@@ -154,8 +174,9 @@ export default class RegisterScreen extends React.Component {
           errorMessage: 'Username too short. (min length: 3)',
         });
       }
-    } else {
-      this.setState({errorMessage: 'Username alerdy exists'});
+    }
+     else {
+      this.setState({errorMessage: 'Username already exists'});
     }
   }
 
@@ -239,6 +260,7 @@ export default class RegisterScreen extends React.Component {
         return this.setState({fcm_token});
       });
     this.requestUserPermission();
+    console.log(this.checkUsernameValidity("12414"))
   }
 
   renderTermsServices = () => {
@@ -563,9 +585,12 @@ export default class RegisterScreen extends React.Component {
     return (
     <View style={{backgroundColor: COLOURS.DODGER_BLUE, flex: 1}}>
       <ScrollView 
+      keyboardShouldPersistTaps={'handled'}
          >
         <View style={styles.container}>
           <ScrollView
+
+            keyboardShouldPersistTaps={'handled'}
             style={styles.form}
             contentContainerStyle={styles.formContainter}>
             <Text style={styles.heading}>Register.</Text>
@@ -599,6 +624,7 @@ export default class RegisterScreen extends React.Component {
               onChangeText={username => {
                 this.changeUsernameToLowercase(username);
                 this.checkUniqueUsername();
+                this.checkUsernameValidity(username);
               }}
               returnKeyType="done"
               label={'Username'}

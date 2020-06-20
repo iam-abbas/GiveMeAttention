@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {COLOURS} from '../config/colors';
+import FastImage from 'react-native-fast-image';
+
 
 export class RequestsCard extends React.Component {
   constructor(props) {
@@ -23,7 +25,7 @@ export class RequestsCard extends React.Component {
     return (
       <View style={[styles.container]}>
         <View style={styles.leftSide}>
-          <Image source={{uri: this.props.userAvatar}} style={styles.image} />
+          <FastImage source={{uri: this.props.userAvatar}} style={styles.image} />
           <Text style={[styles.name, styles.text]}>{this.props.username}</Text>
         </View>
         <View style={styles.rightSide}>

@@ -20,6 +20,7 @@ import {ContactCard} from '../common/ContactCard';
 import ImagePicker from 'react-native-image-picker';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
 import storage from '@react-native-firebase/storage';
+import FastImage from 'react-native-fast-image';
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -117,6 +118,9 @@ export default class HomeScreen extends React.Component {
         skipBackup: true,
         path: 'images',
       },
+      maxWidth: 250,
+      maxHeight: 250,
+      quality: 1.0
     };
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
@@ -353,9 +357,11 @@ export default class HomeScreen extends React.Component {
           </SafeAreaView>
           <Text style={styles.needAttention}>Give Me Attention</Text>
           <TouchableOpacity onPress={this.handlePickAvatar}>
-            <Image
+            <FastImage
               source={{
                 uri: this.state.avatar,
+                headers: { Authorization: 'someAuthToken' },
+                priority: FastImage.priority.normal,
               }}
               style={[styles.dp, styles.dpLarge]}
             />

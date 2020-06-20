@@ -87,7 +87,7 @@ target 'GiveMeAttention' do
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary.podspec"
 
 
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
 
   target 'GiveMeAttentionTests' do
     inherit! :complete

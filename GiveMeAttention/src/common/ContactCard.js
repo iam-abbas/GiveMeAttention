@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, Image, Dimensions, TouchableOpacity } from "react-native";
 import { COLOURS } from "../config/colors";
+import FastImage from 'react-native-fast-image';
+
 
 export class ContactCard extends React.Component {
   constructor(props) {
@@ -12,7 +14,7 @@ export class ContactCard extends React.Component {
         onPress={this.props.onPress}
         style={styles.container}
       >
-        <Image source={{uri: this.props.imageURL}} style={styles.image} />
+        <FastImage source={{uri: this.props.imageURL}} style={styles.image} />
         <Text style={styles.text}>{this.props.name}</Text>
       </TouchableOpacity>
     );

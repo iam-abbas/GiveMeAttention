@@ -52,6 +52,8 @@ export default class AddFriendScreen extends React.Component {
             'You have been blocked by this user! Only they can send you friend request!',
         });
       }
+
+
       firestore()
         .collection('users')
         .doc(uid)
@@ -62,6 +64,8 @@ export default class AddFriendScreen extends React.Component {
         })
         .then(() => {
           this.setState({message: 'Friend request sent'});
+          // Send notification to person who received a request
+          this.sendFriendRequestNotif(uid);
         });
       firestore()
         .collection('users')
@@ -72,11 +76,56 @@ export default class AddFriendScreen extends React.Component {
     } else {
       this.setState({message: 'Username does not exists.'});
     }
+
+    this.setState({friendUsername:null})
   };
+
+
+ getProfileByUserID = async userid => {
+    const user = await firestore()
+      .collection('users')
+      .doc(userid)
+      .get();
+    return user.data();
+  };
+
+
+  sendFriendRequestNotif = async (uid) => {
+
+    const user_data = await this.getProfileByUserID(uid);
+    var fcm_token = user_data.fcmtoken;
+    const FIREBASE_API_KEY =
+      'AAAAU9pUIfA:APA91bFNiuUwGYRATBERB1T2F1fLOaYYl2cpJGPxdVufXdsut2jSTl1NquEeYAa73lIF1wekjundPbqt7eja4oxH8GXzU99GI_I281terZr5Soaa1UuKLtYNqoZHzJ-zk3jv6GYH9DBC';
+    const message = {
+      registration_ids: [fcm_token],
+      notification: {
+        title: 'GiveMeAttention',
+        body: 'You received a new friend request!',
+        vibrate: 1,
+        sound: 1,
+        show_in_foreground: true,
+        priority: 'high',
+        content_available: true,
+      },
+    };
+    let headers = new Headers({
+      'Content-Type': 'application/json',
+      Authorization: 'key=' + FIREBASE_API_KEY,
+    });
+
+    let response = await fetch('https://fcm.googleapis.com/fcm/send', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(message),
+    });
+    response = await response.json();
+    console.log(response);
+  }
 
   render() {
     return (
       <ScrollView
+        keyboardShouldPersistTaps={'handled'}
         style={styles.container}
         contentContainerStyle={styles.containerContent}>
         <SafeAreaView>
@@ -94,7 +143,10 @@ export default class AddFriendScreen extends React.Component {
             returnKeyType="done"
             label={'Friend Username'}
           />
-          <Button label="Add Friend" onPress={this.addFriend} />
+          <Button label="Add Friend" onPress={() => {
+            this.addFriend()
+          }
+        } />
         </View>
       </ScrollView>
     );
