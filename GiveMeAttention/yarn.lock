@@ -5199,6 +5199,11 @@ react-native-device-info@^5.5.8:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-5.5.8.tgz#5b971db0b550b1e53eb176c5042812429cf3a16b"
   integrity sha512-Y4EkBXUfdpDMP+utVaQcgWnNXoqf7B6rLCS0hwpaifzhrzC7cb51vhaPBN1p4Kqym3AfqZ6VoMjorvFJLRAjqg==
 
+react-native-fast-image@^8.1.5:
+  version "8.5.8"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.8.tgz#6f685ecbff5d8f74f33fc3c6b38c4eea9b33a6fd"
+  integrity sha512-yVVKKPIbk6HrFwC+RynJluGb23Vy8TVQ4gN/Y9LyGaohDoRaxbwZzWdUA4CuT63ILImf5IqOmokypuTVQAD99w==
+
 react-native-gesture-handler@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"
@@ -5208,11 +5213,6 @@ react-native-gesture-handler@^1.6.1:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.4"
     prop-types "^15.7.2"
-
-react-native-icons@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/react-native-icons/-/react-native-icons-0.7.1.tgz#a05c6c87bff7bfd883903bb9b7156f5ba568f977"
-  integrity sha1-oFxsh7/3v9iDkDu5txVvW6Vo+Xc=
 
 react-native-image-picker@^2.3.1:
   version "2.3.1"
@@ -6242,9 +6242,9 @@ tmp@^0.0.33:
     os-tmpdir "~1.0.2"
 
 tmpl@1.0.x:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
-  integrity sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
+  integrity sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"
